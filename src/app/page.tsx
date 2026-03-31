@@ -1,17 +1,22 @@
 import { createClient } from "@/utils/supabase/server";
 import { MenuGrid } from "@/components/menu-grid";
 import { CartPanel } from "@/components/cart-panel";
-import { MenuItem } from "@/types";
+import { MenuItem, Category } from "@/types";
+import { getCategories } from "@/actions/category-actions";
 
 export default async function CashierPage() {
   const supabase = await createClient();
 
-  const { data: products, error } = await supabase
-    .from("products")
-    .select("*")
-    .eq("is_active", true)
-    .order("category", { ascending: true })
-    .order("name", { ascending: true });
+  const [productsResponse, categories] = await Promise.all([
+    supabase
+      .from("products")
+      .select("*, categories(name, slug, emoji)")
+      .eq("is_active", true)
+      .order("name", { ascending: true }),
+    getCategories()
+  ]);
+
+  const { data: products, error } = productsResponse;
 
   if (error) {
     console.error("Fetch Products Error:", error);
@@ -22,7 +27,7 @@ export default async function CashierPage() {
     id: p.id,
     name: p.name,
     price: Number(p.price),
-    category: p.category,
+    category: p.categories?.slug || "uncategorized",
     emoji: p.emoji || "🍔",
   }));
 
@@ -55,7 +60,7 @@ export default async function CashierPage() {
       <div className="flex-1 flex flex-col md:flex-row gap-6 p-6 h-full overflow-hidden">
         {/* Left Column: Menu */}
         <section className="flex-1 h-full min-h-0 bg-white/30 rounded-[2.5rem] border p-6 shadow-xl backdrop-blur-sm">
-          <MenuGrid items={menuItems} />
+          <MenuGrid items={menuItems} categories={categories as Category[]} />
         </section>
 
         {/* Right Column: Cart */}

@@ -6,6 +6,9 @@ import { ShoppingCart, Banknote, AlertTriangle, History } from "lucide-react";
 import { InventoryActionsPortal } from "@/components/inventory-dialogs";
 import { getRawMaterials } from "@/actions/inventory-actions";
 import { MenuManagementTable } from "@/components/menu-table";
+import { CategoryManager } from "@/components/category-manager";
+import { getCategories } from "@/actions/category-actions";
+import { ProductBuilder } from "@/components/product-builder";
 
 export default async function AdminDashboard() {
   const today = new Date();
@@ -43,14 +46,17 @@ export default async function AdminDashboard() {
     .order("created_at", { ascending: false })
     .limit(10);
 
-  // 4. Fetch All Products for Menu Management
+  // 4. Fetch All Products for Menu Management (Joined with Categories)
   const { data: allProducts, error: productsError } = await supabase
     .from("products")
-    .select("*")
-    .order("category", { ascending: true })
+    .select(`
+      *,
+      categories (name, emoji)
+    `)
     .order("name", { ascending: true });
 
   const rawMaterialsForSelection = await getRawMaterials();
+  const categories = await getCategories();
 
   return (
     <div className="min-h-screen bg-background p-8 pb-32 space-y-12">
@@ -68,8 +74,11 @@ export default async function AdminDashboard() {
           </p>
         </div>
         
-        {/* Actions (Restock/Waste) */}
-        <InventoryActionsPortal materials={rawMaterialsForSelection} />
+        {/* Actions (Restock/Waste/Add Product) */}
+        <div className="flex items-center gap-3">
+          <ProductBuilder categories={categories} materials={rawMaterialsForSelection} />
+          <InventoryActionsPortal materials={rawMaterialsForSelection} />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
@@ -223,6 +232,11 @@ export default async function AdminDashboard() {
               </Table>
             </CardContent>
           </Card>
+        </div>
+
+        {/* Category Management Section */}
+        <div className="col-span-full pt-6">
+          <CategoryManager categories={categories} />
         </div>
 
         {/* Menu Management Section */}

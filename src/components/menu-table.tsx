@@ -21,7 +21,11 @@ import { Loader2, Save, ShoppingBag } from "lucide-react";
 interface Product {
   id: string;
   name: string;
-  category: string;
+  category_id: string;
+  categories?: {
+    name: string;
+    emoji: string;
+  };
   price: number;
   is_active: boolean;
 }
@@ -99,7 +103,7 @@ function ProductRow({ product }: { product: Product }) {
       <TableCell className="font-black text-foreground pl-8 text-lg">{product.name}</TableCell>
       <TableCell>
         <Badge variant="secondary" className="bg-muted text-muted-foreground border-none font-bold uppercase text-[10px] tabular-nums">
-          {product.category}
+          {product.categories?.emoji} {product.categories?.name}
         </Badge>
       </TableCell>
       <TableCell className="text-center">

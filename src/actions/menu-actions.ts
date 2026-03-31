@@ -51,3 +51,64 @@ export async function updateProductPrice(productId: string, newPrice: number) {
   revalidatePath("/");
   return { success: true };
 }
+
+/**
+ * Creates a new product with an optional recipe
+ */
+export async function createProductWithRecipe(
+  productData: {
+    name: string;
+    price: number;
+    category_id: string;
+    emoji: string;
+  },
+  recipeItems?: { raw_material_id: string; quantity_required: number }[]
+) {
+  const supabase = await createClient();
+
+  // 0. Auth check
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    return { error: "Unauthorized. Please log in." };
+  }
+
+  // 1. Insert Product
+  const { data: product, error: productError } = await supabase
+    .from("products")
+    .insert({
+      name: productData.name,
+      price: productData.price,
+      category_id: productData.category_id,
+      emoji: productData.emoji,
+      is_active: true,
+    })
+    .select()
+    .single();
+
+  if (productError) {
+    console.error("Create Product Error:", productError);
+    return { error: productError.message };
+  }
+
+  // 2. Insert Recipe Items if provided
+  if (recipeItems && recipeItems.length > 0) {
+    const recipesToInsert = recipeItems.map((item) => ({
+      product_id: product.id,
+      raw_material_id: item.raw_material_id,
+      quantity_required: item.quantity_required,
+    }));
+
+    const { error: recipeError } = await supabase
+      .from("recipes")
+      .insert(recipesToInsert);
+
+    if (recipeError) {
+      console.error("Create Recipe Error:", recipeError);
+      return { error: `Product created, but failed to link recipe: ${recipeError.message}` };
+    }
+  }
+
+  revalidatePath("/admin");
+  revalidatePath("/");
+  return { success: true };
+}

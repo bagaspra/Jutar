@@ -1,74 +1,80 @@
 "use client";
 
 import { useState } from "react";
-import { MenuItem } from "@/types";
-import { MENU_CATEGORIES, MenuCategory } from "@/types";
-import { useCartStore } from "@/store/useCartStore";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { MenuItem, Category } from "@/types";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useCartStore } from "@/store/useCartStore";
 import { cn } from "@/lib/utils";
 
 interface MenuGridProps {
   items: MenuItem[];
+  categories: Category[];
 }
 
-export function MenuGrid({ items }: MenuGridProps) {
-  const [activeCategory, setActiveCategory] = useState<MenuCategory>("burgers");
-  const addItem = useCartStore((state) => state.addItem);
+export function MenuGrid({ items, categories }: MenuGridProps) {
+  // Default to the first category if it exists, otherwise empty
+  const [activeTab, setActiveTab] = useState<string>(categories[0]?.slug || "");
+  const { addItem } = useCartStore();
 
-  const filteredItems = items.filter((item) => item.category === activeCategory);
+  const filteredItems = items.filter((item) => item.category === activeTab);
 
   return (
-    <div className="flex flex-col gap-6 h-full">
+    <div className="flex flex-col h-full gap-6">
       {/* Category Tabs */}
-      <div className="flex gap-2 p-1 bg-muted rounded-xl overflow-x-auto no-scrollbar">
-        {MENU_CATEGORIES.map((cat) => (
-          <button
-            key={cat.value}
-            onClick={() => setActiveCategory(cat.value)}
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar scroll-smooth p-1">
+        {categories.map((cat) => (
+          <Button
+            key={cat.id}
+            variant="ghost"
+            onClick={() => setActiveTab(cat.slug)}
             className={cn(
-              "flex items-center gap-2 px-6 py-3 rounded-lg transition-all whitespace-nowrap font-medium text-sm",
-              activeCategory === cat.value
-                ? "bg-primary text-primary-foreground shadow-md scale-105"
-                : "hover:bg-background/50 text-muted-foreground"
+              "h-12 rounded-xl px-6 font-bold transition-all whitespace-nowrap",
+              activeTab === cat.slug
+                ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-105"
+                : "bg-muted/50 hover:bg-muted text-muted-foreground"
             )}
           >
-            <span className="text-xl">{cat.emoji}</span>
-            {cat.label}
-          </button>
+            <span className="mr-2 text-xl">{cat.emoji}</span>
+            {cat.name}
+          </Button>
         ))}
       </div>
 
-      {/* Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-8 overflow-y-auto pr-2">
-        {filteredItems.map((item) => (
-          <Card 
-            key={item.id} 
-            className="group hover:shadow-xl transition-all duration-300 border-none bg-white/80 backdrop-blur-sm ring-1 ring-black/5 flex flex-col justify-between"
-          >
-            <CardContent className="pt-6 flex flex-col items-center gap-3">
-              <div className="text-6xl group-hover:scale-110 transition-transform duration-300 drop-shadow-sm">
-                {item.emoji}
-              </div>
-              <div className="text-center">
-                <h3 className="font-bold text-foreground text-sm line-clamp-1">{item.name}</h3>
-                <Badge variant="secondary" className="mt-1 bg-primary/10 text-primary hover:bg-primary/20 transition-colors border-none">
-                  ${item.price.toFixed(2)}
-                </Badge>
-              </div>
-            </CardContent>
-            <CardFooter className="pb-4">
-              <Button 
+      {/* Products Grid */}
+      <ScrollArea className="flex-1 pr-4">
+        {filteredItems.length === 0 ? (
+          <div className="h-full flex flex-col items-center justify-center text-center opacity-30 mt-20">
+            <div className="text-6xl mb-4">🍽️</div>
+            <p className="text-lg font-bold">No items found in this category.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-10">
+            {filteredItems.map((item) => (
+              <button
+                key={item.id}
                 onClick={() => addItem(item)}
-                className="w-full rounded-lg h-10 font-bold bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 transition-all active:scale-95"
+                className="group relative flex flex-col bg-white rounded-3xl p-4 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ring-1 ring-black/5 active:scale-95 text-left"
               >
-                Add to Cart
-              </Button>
-            </CardFooter>
-          </Card>
-        ))}
-      </div>
+                <div className="aspect-square bg-muted rounded-2xl flex items-center justify-center text-5xl mb-4 group-hover:scale-110 transition-transform duration-500 bg-linear-to-br from-muted to-muted/30">
+                  {item.emoji}
+                </div>
+                <h3 className="font-bold text-sm text-foreground mb-1 truncate pr-4">
+                  {item.name}
+                </h3>
+                <p className="text-primary font-black text-base mt-auto">
+                  ${item.price.toFixed(2)}
+                </p>
+                <div className="absolute top-3 right-3 text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="size-6 bg-primary text-white rounded-lg flex items-center justify-center">
+                    +
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
+      </ScrollArea>
     </div>
   );
 }
