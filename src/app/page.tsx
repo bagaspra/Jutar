@@ -28,7 +28,7 @@ export default async function CashierPage() {
     name: p.name,
     price: Number(p.price),
     category: p.categories?.slug || "uncategorized",
-    emoji: p.emoji || "🍔",
+    emoji: p.categories?.emoji || "🍔",
   }));
 
   return (

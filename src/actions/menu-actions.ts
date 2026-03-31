@@ -60,7 +60,6 @@ export async function createProductWithRecipe(
     name: string;
     price: number;
     category_id: string;
-    emoji: string;
   },
   recipeItems?: { raw_material_id: string; quantity_required: number }[]
 ) {
@@ -79,7 +78,6 @@ export async function createProductWithRecipe(
       name: productData.name,
       price: productData.price,
       category_id: productData.category_id,
-      emoji: productData.emoji,
       is_active: true,
     })
     .select()

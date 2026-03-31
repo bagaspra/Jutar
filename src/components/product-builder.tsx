@@ -120,7 +120,7 @@ export function ProductBuilder({ categories, materials }: ProductBuilderProps) {
           <div className="flex-1 overflow-y-auto p-8 space-y-8">
             {/* Core Details */}
             <div className="grid grid-cols-2 gap-6">
-              <div className="space-y-2 col-span-2 sm:col-span-1">
+              <div className="space-y-2 col-span-2">
                 <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Product Name</Label>
                 <Input name="name" placeholder="e.g. Double Cheeseburger" required className="rounded-2xl h-12 bg-muted/50 border-none font-bold" />
               </div>
@@ -142,10 +142,6 @@ export function ProductBuilder({ categories, materials }: ProductBuilderProps) {
                     ))}
                   </SelectContent>
                 </Select>
-              </div>
-              <div className="space-y-2 col-span-2 sm:col-span-1">
-                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Icon / Emoji</Label>
-                <Input name="emoji" placeholder="🍔" maxLength={2} required className="rounded-2xl h-12 bg-muted/50 border-none font-bold text-center text-xl" />
               </div>
             </div>
 
