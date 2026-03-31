@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Customer Facing Display - Editorial Gastronomy</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#c41e3a",
+              "on-primary": "#ffffff",
+              "surface": "#f9f9f9",
+              "on-surface": "#1a1c1c",
+              "surface-variant": "#f3f4f6",
+              "on-surface-variant": "#6b7280",
+              "outline": "#e5e7eb",
+              "surface-container": "#eeeeee",
+              "surface-container-low": "#f3f3f3",
+              "surface-container-lowest": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {
+                "DEFAULT": "0.25rem", 
+                "lg": "0.5rem", 
+                "xl": "0.75rem", 
+                "card": "1.5rem",
+                "full": "9999px"
+            },
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        h1, h2, h3, .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .order-list::-webkit-scrollbar { width: 4px; }
+        .order-list::-webkit-scrollbar-track { background: transparent; }
+        .order-list::-webkit-scrollbar-thumb { background: #e8e8e8; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface h-screen overflow-hidden flex flex-col">
+<!-- Top Navigation -->
+<header class="bg-white border-b border-outline flex justify-between items-center w-full px-12 py-6 z-50">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-2xl" style="font-variation-settings: 'FILL' 1;">restaurant</span>
+</div>
+<div class="text-2xl font-extrabold tracking-tighter text-on-surface font-headline">Editorial Gastronomy</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="bg-green-50 text-green-700 px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2">
+<span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+            Live Order View
+        </div>
+<div class="text-on-surface-variant font-bold text-sm bg-surface-variant px-4 py-2 rounded-full">
+            Table T-11
+        </div>
+</div>
+</header>
+<!-- Main Content: Centered Layout -->
+<main class="flex-1 flex justify-center items-center p-8 bg-surface overflow-hidden">
+<div class="w-full max-w-5xl h-full flex gap-8">
+<!-- Left: Order Summary -->
+<section class="flex-1 bg-white rounded-card shadow-sm border border-outline flex flex-col overflow-hidden">
+<div class="p-8 border-b border-outline flex justify-between items-end">
+<div>
+<h2 class="text-3xl font-extrabold tracking-tight font-headline text-on-surface">Your Order</h2>
+<p class="text-on-surface-variant font-medium text-xs mt-1">Transaction ID: #1100233438</p>
+</div>
+<div class="text-right">
+<p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Guest</p>
+<p class="text-sm font-extrabold text-on-surface">Ayato Zain</p>
+</div>
+</div>
+<!-- Scrollable Order Items -->
+<div class="flex-1 overflow-y-auto order-list px-8 py-8 space-y-8">
+<!-- Item 1 -->
+<div class="flex items-start gap-6">
+<div class="relative w-24 h-24 rounded-2xl overflow-hidden bg-surface-variant shrink-0">
+<img alt="Korean Fried Chicken" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDFb54sVqVRJ3XQ-9nII3B6DvhMUY-bPtQDlL1FMV23i3TkkKP_F-f7khBVSz0XMhT_krouimCI6xpNqeJNZopn6TWtZb8WGOxb1_VtI2lnY7CxcbumswQvKkyE9v4TupYveJjyxVOfiz8uCWPoFpsGn6fvH4JyUcYG-q20dwOS39PVd6J_PVmZfVHCo2-n5o8IFzxOqFzcwlj12x7l7x2cOMki3NZPYhZA_K212PnFoUu3A-7YRZ7LNhcCtX-AmbkL9JKZO9FzGk"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start gap-4">
+<div>
+<h3 class="font-headline font-bold text-lg text-on-surface leading-tight">Sweet And Spicy Korean Fried Chicken</h3>
+<div class="mt-2 space-y-1">
+<p class="text-xs text-on-surface-variant flex items-center gap-2">
+<span class="font-bold text-on-surface">1x</span> Drumstick, Level 5, Extra Cheese Sauce
+                                    </p>
+<p class="text-xs text-on-surface-variant flex items-center gap-2">
+<span class="font-bold text-on-surface">1x</span> Chicken Wings, Level 3, Extra Tomato Sauce
+                                    </p>
+</div>
+<div class="mt-3 inline-block bg-surface px-3 py-1 rounded-lg text-[10px] text-on-surface-variant italic border border-outline/50">
+                                    "Without vegetables"
+                                </div>
+</div>
+<span class="font-headline font-extrabold text-on-surface whitespace-nowrap">Rp 56.000</span>
+</div>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="flex items-start gap-6">
+<div class="relative w-24 h-24 rounded-2xl overflow-hidden bg-surface-variant shrink-0">
+<img alt="Mosse Cake" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3wmeFqUUl7LxQFDAYXk4k0tLQeItvtCBFJScbkxSSqymtw8oVRqkV28n_-5ZfqdRZUhiyQAZK82Lf7zxHuYhr3gMAc84fvahYRelI1YL5rGcEgFW5CvhIUX5En6sTYNAqGSRFqOLrQOWRz9WSmWBT9Anpdw1JlmAVzJw-e_4nTeQB3nDzAmWzb3jsj-ggbtyAJP2l8eslL-i5zuWt9RhhsGNI5p65GoZPaUcIhvoHLAl8gnJq4wP7kqontVtj6_O1eQzYpDWpTVY"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start gap-4">
+<div>
+<h3 class="font-headline font-bold text-lg text-on-surface leading-tight">Mosse Cake With Strawberry Topping</h3>
+<p class="text-xs text-on-surface-variant mt-2">
+<span class="font-bold text-on-surface">1x</span> Regular Serving
+                                </p>
+</div>
+<span class="font-headline font-extrabold text-on-surface whitespace-nowrap">Rp 34.500</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Branding Message -->
+<div class="px-8 py-6 bg-surface-variant/30 text-center border-t border-outline">
+<p class="text-on-surface-variant font-medium text-sm">Thank you for dining with us at Editorial Gastronomy.</p>
+</div>
+</section>
+<!-- Right: Payment Breakdown -->
+<section class="w-[380px] flex flex-col gap-6">
+<div class="bg-white rounded-card shadow-sm border border-outline p-8 flex flex-col h-full">
+<h3 class="text-xl font-extrabold mb-8 font-headline">Order Summary</h3>
+<div class="space-y-4 flex-1">
+<div class="flex justify-between text-sm font-bold text-on-surface-variant">
+<span>Subtotal</span>
+<span class="text-on-surface">Rp 92.500</span>
+</div>
+<div class="flex justify-between text-sm font-bold text-on-surface-variant">
+<span>Discount</span>
+<span class="text-on-surface">Rp 12.000</span>
+</div>
+<div class="flex justify-between text-sm font-bold text-on-surface-variant pb-6 border-b border-outline">
+<span>Tax</span>
+<span class="text-on-surface">Rp 3.000</span>
+</div>
+<div class="pt-6">
+<p class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Total Payment</p>
+<h1 class="text-5xl font-extrabold font-headline tracking-tighter text-primary">Rp 83.500</h1>
+</div>
+</div>
+<div class="mt-auto space-y-6">
+<div class="bg-red-50 p-4 rounded-xl border border-red-100 flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">confirmation_number</span>
+<div>
+<p class="text-[10px] font-bold text-primary uppercase tracking-wider leading-none mb-1">Voucher Applied</p>
+<p class="text-xs font-extrabold text-on-surface">SAVE12K - Welcome Reward</p>
+</div>
+</div>
+<div class="flex flex-col items-center gap-3 py-4 border-t border-outline">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-2xl">contactless</span>
+<span class="text-xs font-bold uppercase tracking-widest">Ready for Payment</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Global Footer -->
+<footer class="bg-white border-t border-outline flex justify-between items-center px-12 py-4 w-full z-50">
+<div class="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant">
+        © 2024 Editorial Gastronomy POS. Premium Hospitality Experience.
+    </div>
+<div class="flex gap-8">
+<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/50">Terms of Service</span>
+<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/50">Privacy Policy</span>
+</div>
+</footer>
+</body></html>

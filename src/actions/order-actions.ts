@@ -1,15 +1,18 @@
 "use server";
 
-import { supabase } from "@/lib/supabase/client";
+import { createClient } from "@/utils/supabase/server";
 import { CartItem } from "@/types";
 import { revalidatePath } from "next/cache";
 
 export async function processCheckout(
   cartItems: CartItem[], 
   paymentMethod: string, 
-  totalAmount: number
+  totalAmount: number,
+  orderType: "dine_in" | "take_away" = "dine_in"
 ) {
   try {
+    const supabase = await createClient();
+
     // 1. Generate Receipt Number: INV-YYYYMMDD-XXXX
     const date = new Date();
     const dateStr = date.toISOString().slice(0, 10).replace(/-/g, "");
@@ -24,6 +27,7 @@ export async function processCheckout(
         total_amount: totalAmount,
         payment_method: paymentMethod,
         status: "paid", // Setting to 'paid' immediately triggers inventory deduction
+        order_type: orderType,
       })
       .select()
       .single();
@@ -45,6 +49,7 @@ export async function processCheckout(
     if (itemsError) throw itemsError;
 
     revalidatePath("/");
+    revalidatePath("/admin");
     return { success: true, order };
   } catch (error: any) {
     console.error("Checkout Error:", error);

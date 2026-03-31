@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Crimson Kiosk | Premium POS</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#c41e3a",
+                "on-primary": "#ffffff",
+                "surface": "#f9f9f9",
+                "on-surface": "#1a1c1c",
+                "surface-variant": "#f3f4f6",
+                "on-surface-variant": "#6b7280",
+                "outline": "#e5e7eb"
+              },
+              fontFamily: {
+                "headline": ["Plus Jakarta Sans"],
+                "body": ["Inter"],
+              },
+              borderRadius: {
+                "card": "1.5rem",
+                "sidebar": "3rem"
+              },
+            },
+          },
+        }
+      </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-white text-on-surface flex min-h-screen overflow-hidden">
+<!-- Left Sidebar Navigation -->
+<aside class="h-[calc(100vh-2rem)] w-28 bg-primary rounded-sidebar m-4 flex flex-col items-center py-8 gap-10 text-white shrink-0">
+<div class="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-primary text-3xl material-symbols-fill">restaurant</span>
+</div>
+<nav class="flex flex-col gap-8 flex-1">
+<a class="flex flex-col items-center gap-1 opacity-100" href="#">
+<span class="material-symbols-outlined text-2xl material-symbols-fill">restaurant_menu</span>
+<span class="text-[10px] font-bold">Menu</span>
+</a>
+<a class="flex flex-col items-center gap-1 opacity-60 hover:opacity-100 transition-opacity" href="#">
+<span class="material-symbols-outlined text-2xl">grid_view</span>
+<span class="text-[10px] font-bold">Table</span>
+</a>
+<a class="flex flex-col items-center gap-1 opacity-60 hover:opacity-100 transition-opacity" href="#">
+<span class="material-symbols-outlined text-2xl">assignment</span>
+<span class="text-[10px] font-bold">Order List</span>
+</a>
+<a class="flex flex-col items-center gap-1 opacity-60 hover:opacity-100 transition-opacity" href="#">
+<span class="material-symbols-outlined text-2xl">history</span>
+<span class="text-[10px] font-bold">Order History</span>
+</a>
+<a class="flex flex-col items-center gap-1 opacity-60 hover:opacity-100 transition-opacity" href="#">
+<span class="material-symbols-outlined text-2xl">bar_chart</span>
+<span class="text-[10px] font-bold">Report</span>
+</a>
+</nav>
+<a class="flex flex-col items-center gap-1 opacity-60 hover:opacity-100 transition-opacity" href="#">
+<span class="material-symbols-outlined text-2xl">settings</span>
+<span class="text-[10px] font-bold">Settings</span>
+</a>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 min-h-screen flex flex-col overflow-hidden px-6 pt-6">
+<!-- Top Search Bar & Profile -->
+<header class="flex justify-between items-center mb-8">
+<div class="relative w-full max-w-md">
+<input class="w-full pl-6 pr-12 py-3.5 bg-surface-variant/50 border-none rounded-full text-sm placeholder-on-surface-variant focus:ring-1 focus:ring-primary/20" placeholder="Search category or menu" type="text"/>
+<span class="material-symbols-outlined absolute right-6 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">search</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+<span class="material-symbols-outlined text-xl">wifi</span>
+</div>
+<div class="flex items-center gap-3 bg-white border border-outline rounded-full pl-2 pr-4 py-1.5 cursor-pointer">
+<img alt="User" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdU9lJXCXulElyTfkoedO2d5buh7Eetrlf0V8ERl0V5Mi8-7U7xIQrSH3_nmPnLlfYdGXBixG314j3uQMDdszNGSh4-rpJwMr6FigtofbBtnyP6ZNL7dGHxojAGGwov_flHYDpED-KguRCQNtVbC90p7DEzEQAMpvrhwog8Bt7JSpim05FeIH1clloKuEaWR9QTW1YDi98a0GJRJUzIcAFOeUhDuq7VxfQ9DGFRCKJfEW9JJGLbuBxJGGE_yfdgJBMeLnpmcDLz-w"/>
+<div class="leading-none">
+<p class="text-xs font-bold">Alecks Romani</p>
+<p class="text-[10px] text-on-surface-variant">Cashier</p>
+</div>
+<span class="material-symbols-outlined text-sm">expand_more</span>
+</div>
+</div>
+</header>
+<!-- Categories Section -->
+<section class="mb-8">
+<h2 class="text-xl font-extrabold mb-4">Categories</h2>
+<div class="flex gap-4 overflow-x-auto no-scrollbar pb-2">
+<!-- Category Item Active -->
+<button class="flex flex-col items-center justify-center min-w-[84px] h-28 bg-primary text-white rounded-2xl shadow-lg shadow-primary/20 shrink-0">
+<div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center mb-3">
+<span class="material-symbols-outlined material-symbols-fill">restaurant</span>
+</div>
+<span class="text-xs font-bold">All Items</span>
+</button>
+<!-- Category Item -->
+<button class="flex flex-col items-center justify-center min-w-[84px] h-28 bg-white border border-outline rounded-2xl shrink-0 hover:border-primary/30 transition-colors">
+<div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center mb-3 text-orange-500">
+<span class="material-symbols-outlined">set_meal</span>
+</div>
+<span class="text-xs font-bold text-on-surface-variant">Chicken</span>
+</button>
+<!-- Category Item -->
+<button class="flex flex-col items-center justify-center min-w-[84px] h-28 bg-white border border-outline rounded-2xl shrink-0">
+<div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mb-3 text-red-500">
+<span class="material-symbols-outlined">kebab_dining</span>
+</div>
+<span class="text-xs font-bold text-on-surface-variant">Steak</span>
+</button>
+<!-- Category Item -->
+<button class="flex flex-col items-center justify-center min-w-[84px] h-28 bg-white border border-outline rounded-2xl shrink-0">
+<div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mb-3 text-blue-500">
+<span class="material-symbols-outlined">water_drop</span>
+</div>
+<span class="text-xs font-bold text-on-surface-variant">Fish</span>
+</button>
+<!-- Category Item -->
+<button class="flex flex-col items-center justify-center min-w-[84px] h-28 bg-white border border-outline rounded-2xl shrink-0">
+<div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mb-3 text-green-500">
+<span class="material-symbols-outlined">eco</span>
+</div>
+<span class="text-xs font-bold text-on-surface-variant">Salad</span>
+</button>
+<!-- Category Item -->
+<button class="flex flex-col items-center justify-center min-w-[84px] h-28 bg-white border border-outline rounded-2xl shrink-0">
+<div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center mb-3 text-purple-500">
+<span class="material-symbols-outlined">local_bar</span>
+</div>
+<span class="text-xs font-bold text-on-surface-variant">Juice</span>
+</button>
+<!-- Category Item -->
+<button class="flex flex-col items-center justify-center min-w-[84px] h-28 bg-white border border-outline rounded-2xl shrink-0">
+<div class="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center mb-3 text-pink-500">
+<span class="material-symbols-outlined">cake</span>
+</div>
+<span class="text-xs font-bold text-on-surface-variant">Dessert</span>
+</button>
+<!-- Category Item -->
+<button class="flex flex-col items-center justify-center min-w-[84px] h-28 bg-white border border-outline rounded-2xl shrink-0">
+<div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center mb-3 text-indigo-500">
+<span class="material-symbols-outlined">lunch_dining</span>
+</div>
+<span class="text-xs font-bold text-on-surface-variant">Burger</span>
+</button>
+</div>
+</section>
+<!-- Menu Grid -->
+<section class="flex-1 overflow-y-auto no-scrollbar pb-8">
+<h2 class="text-xl font-extrabold mb-6">Most Ordered</h2>
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
+<!-- Product Card 1 -->
+<div class="bg-white rounded-card overflow-hidden transition-transform hover:scale-[1.02]">
+<img alt="Honey Fried Chicken" class="w-full aspect-[4/3] object-cover rounded-card mb-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUg248NPn4Z_OVK_VpyDVs1EbSsyzGw1ca7lL6llNE-1g7I2aEIXuOdAD-sM2pW7znv1ES9iT6XkZi3HHgi-JjpG4QZ0QEl_nehlMbKwuhmkSCnFCB3ZoLwSPsMb8KNJWqOW2PBav6M3nV8-IGJWrg5PVBtBl4CdQ_QGORleE4EOlFB_cZQo3MYjYEloR2JVGmN1ChvU-u_VlFfR1UFs3CBy1bWoBFx8kvvtAqP_YCzMDRX9HDIXIB6YIINbI1J0lBu4vEy5cwwaA"/>
+<div class="space-y-1.5">
+<h3 class="font-bold text-sm leading-snug">Honey Fried Chicken</h3>
+<p class="text-[10px] text-on-surface-variant line-clamp-2 leading-relaxed">A dish where chicken is fried with a sweet and slightly spicy flavor, derived from a mi...</p>
+<p class="text-primary font-bold text-base mt-2">Rp 32.110</p>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="bg-white rounded-card overflow-hidden transition-transform hover:scale-[1.02]">
+<img alt="Fried Fish Dumplings" class="w-full aspect-[4/3] object-cover rounded-card mb-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWLiWtje0fHldZT9hE9XqYcQ7dDT6UELsTpZ6JKvSk1y9uxJLnO7K6R5mDS8VIZh0rwlHfjt6JoUDuL0l56Vs9_4ipxM9RyqMUvZyvRLyda2566ZsrqvLtPM1XPcL6MtUcmi30CQeTo0Z4c3IubNc3RarF464zu3s37qESz4inRSoigBHs1vf2s-2ABVggJHehusfvkqx4N1yMl5bZoHJDXiZYQk-HAdtP8jm4jj-j04gzUG7ug4doJQPzRl3-LJpedDT5RtmVoG0"/>
+<div class="space-y-1.5">
+<h3 class="font-bold text-sm leading-snug">Fried Fish Dumplings (Batagor)</h3>
+<p class="text-[10px] text-on-surface-variant line-clamp-2 leading-relaxed">Batagor stands for baso tahu goreng. It consists of two main components, baso (...</p>
+<p class="text-primary font-bold text-base mt-2">Rp 20.450</p>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="bg-white rounded-card overflow-hidden transition-transform hover:scale-[1.02]">
+<img alt="Mango Frooti Special" class="w-full aspect-[4/3] object-cover rounded-card mb-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEMHYmIpXBoXCmeD8ZgeyuRr3BMhjO9cPIxcctkrDbGMqr9U3wEnf4LYN1m5Xj2lj3db8mdgD3GWGnELw_bNqNZJNF2Q5QJdJStvGL5us9L9Zc8atTDvR5Qj2---YexzrxU8j62kMVE8CVRtpU4eIJSlzLsqpQ2N3RuCrgpQfFTwCKlaRRBSlSpT8Rbch8wAL9gyYW9m1ZMxk9yD2pYvW_beGEAmE2OF5fh06S49wzh1RHvWfz5h0TnJRtkWaKGFheVWwEYzwA_o0"/>
+<div class="space-y-1.5">
+<h3 class="font-bold text-sm leading-snug">Mango Frooti Special</h3>
+<p class="text-[10px] text-on-surface-variant line-clamp-2 leading-relaxed">Mango Frooti is made from the pulp of ripe mangoes, which gives it a sweet and tang...</p>
+<p class="text-primary font-bold text-base mt-2">Rp 16.360</p>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="bg-white rounded-card overflow-hidden transition-transform hover:scale-[1.02]">
+<img alt="Rica-Rica Roast Chicken" class="w-full aspect-[4/3] object-cover rounded-card mb-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBa7BS6CU3M6xvuZc2-suLJZA0yzwWViAyuNyt1dnZbyZjOhQQP74sJKg3HWaPSefDgtEOHfHJDRwBibNd5zLwoDUYDMW52c0wCvcrZfJmWGUmIiGcN24YSr60prh1R8ySqjH7qtUxYizvzMDd57GeVps2mhUDNHf7p_RxQpBkydxXfaXwglEg1dDgEa7LjD0EU45PDHNbFUY1LtIJOJt_IyjPelGarU-rDUngtCfDeU0MVa9NpOkUdQw0KAlP1ZOVAV5PUWgWHzgc"/>
+<div class="space-y-1.5">
+<h3 class="font-bold text-sm leading-snug">Rica-Rica Roast Chicken</h3>
+<p class="text-[10px] text-on-surface-variant line-clamp-2 leading-relaxed">Rica-rica Roasted Chicken is a traditional Indonesian dish. It is a grilled or roasted c...</p>
+<p class="text-primary font-bold text-base mt-2">Rp 42.500</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Right Sidebar (Current Order) -->
+<aside class="w-[420px] bg-white border-l border-outline flex flex-col h-screen shrink-0">
+<div class="p-6">
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-2xl font-extrabold">Current Order</h2>
+<div class="bg-green-500 text-white px-3 py-1.5 rounded-full text-[10px] font-bold">T-11</div>
+</div>
+<!-- Recipient Info Card -->
+<div class="bg-surface rounded-2xl p-4 mb-6">
+<div class="flex justify-between items-start mb-2">
+<div>
+<p class="text-[10px] font-semibold text-on-surface-variant mb-0.5">Recipient :</p>
+<p class="text-sm font-bold text-on-surface">Ayato Zain</p>
+</div>
+</div>
+<div class="flex justify-between items-center text-[10px] font-medium text-on-surface-variant">
+<span>ID Transaction : 1100233438</span>
+</div>
+<div class="flex justify-between items-center mt-3 text-[10px] text-on-surface-variant">
+<span class="font-medium">Monday, 15 May 2023</span>
+<span class="font-bold">02:15 PM</span>
+</div>
+</div>
+<!-- Detailed Order List -->
+<div class="space-y-6 max-h-[calc(100vh-500px)] overflow-y-auto no-scrollbar pr-1">
+<!-- Item 1 -->
+<div class="space-y-4">
+<div class="flex gap-4">
+<img alt="Food" class="w-20 h-16 rounded-xl object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDFb54sVqVRJ3XQ-9nII3B6DvhMUY-bPtQDlL1FMV23i3TkkKP_F-f7khBVSz0XMhT_krouimCI6xpNqeJNZopn6TWtZb8WGOxb1_VtI2lnY7CxcbumswQvKkyE9v4TupYveJjyxVOfiz8uCWPoFpsGn6fvH4JyUcYG-q20dwOS39PVd6J_PVmZfVHCo2-n5o8IFzxOqFzcwlj12x7l7x2cOMki3NZPYhZA_K212PnFoUu3A-7YRZ7LNhcCtX-AmbkL9JKZO9FzGk"/>
+<div class="flex-1">
+<h4 class="text-xs font-extrabold text-on-surface leading-tight mb-2">Sweet And Spicy Korean Fried Chicken</h4>
+<div class="flex justify-between items-center">
+<span class="text-[10px] text-on-surface-variant font-medium">Total Price :</span>
+<span class="text-sm font-bold text-primary">Rp 56.000</span>
+</div>
+</div>
+</div>
+<div class="space-y-3 pl-2 border-l-2 border-outline/50 ml-4">
+<div class="flex justify-between text-[10px]">
+<span class="text-on-surface font-bold">1x <span class="text-on-surface-variant font-medium ml-1">Drumstick, Level 5, Extra Cheese Sauce</span></span>
+<span class="font-bold">Rp 29.500</span>
+</div>
+<div class="flex justify-between text-[10px]">
+<span class="text-on-surface font-bold">1x <span class="text-on-surface-variant font-medium ml-1">Chicken Wings, Level 3, Extra Tomato Sauce</span></span>
+<span class="font-bold">Rp 26.500</span>
+</div>
+</div>
+<div class="bg-surface rounded-lg p-2.5 text-[10px] text-on-surface-variant italic">
+                    Without vegetables
+                </div>
+<button class="w-full flex items-center justify-center gap-1.5 py-1 text-[10px] font-bold text-on-surface-variant border-b border-outline/30 pb-2">
+                    Hide Details <span class="material-symbols-outlined text-sm">expand_less</span>
+</button>
+</div>
+<!-- Item 2 -->
+<div class="space-y-4">
+<div class="flex gap-4">
+<img alt="Food" class="w-20 h-16 rounded-xl object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3wmeFqUUl7LxQFDAYXk4k0tLQeItvtCBFJScbkxSSqymtw8oVRqkV28n_-5ZfqdRZUhiyQAZK82Lf7zxHuYhr3gMAc84fvahYRelI1YL5rGcEgFW5CvhIUX5En6sTYNAqGSRFqOLrQOWRz9WSmWBT9Anpdw1JlmAVzJw-e_4nTeQB3nDzAmWzb3jsj-ggbtyAJP2l8eslL-i5zuWt9RhhsGNI5p65GoZPaUcIhvoHLAl8gnJq4wP7kqontVtj6_O1eQzYpDWpTVY"/>
+<div class="flex-1">
+<h4 class="text-xs font-extrabold text-on-surface leading-tight mb-2">Mosse Cake With Strawberry Topping</h4>
+<div class="flex justify-between items-center">
+<span class="text-[10px] text-on-surface-variant font-medium">Total Price :</span>
+<span class="text-sm font-bold text-primary">Rp 34.500</span>
+</div>
+</div>
+</div>
+<button class="w-full flex items-center justify-center gap-1.5 py-1 text-[10px] font-bold text-on-surface-variant border-b border-outline/30 pb-2">
+                    View Details <span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Bottom Action Section -->
+<div class="mt-auto p-6 bg-white border-t border-outline">
+<div class="flex items-center justify-between bg-red-50 rounded-xl px-4 py-3 mb-6">
+<span class="text-[10px] font-bold text-primary">Voucher Applied</span>
+<button class="text-[10px] font-bold text-primary">View</button>
+</div>
+<div class="space-y-2 mb-6">
+<div class="flex justify-between text-xs font-bold text-on-surface-variant/70">
+<span>Subtotal</span>
+<span class="text-on-surface">Rp 92.500</span>
+</div>
+<div class="flex justify-between text-xs font-bold text-on-surface-variant/70">
+<span>Discount</span>
+<span class="text-on-surface">Rp 12.000</span>
+</div>
+<div class="flex justify-between text-xs font-bold text-on-surface-variant/70">
+<span>Tax</span>
+<span class="text-on-surface">Rp 3.000</span>
+</div>
+</div>
+<div class="flex justify-between items-center mb-6">
+<span class="text-sm font-extrabold">Total Payment</span>
+<span class="text-xl font-extrabold text-primary">Rp 83.500</span>
+</div>
+<button class="w-full bg-primary hover:bg-primary/90 text-white font-extrabold py-4 rounded-2xl transition-all active:scale-[0.98] shadow-lg shadow-primary/25">
+            Proceed
+        </button>
+</div>
+</aside>
+</body></html>

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Editorial Gastronomy - Management Suite</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#c41e3a",
+                        "on-primary": "#ffffff",
+                        "surface": "#f9f9f9",
+                        "on-surface": "#1a1c1c",
+                        "surface-variant": "#f3f4f6",
+                        "on-surface-variant": "#6b7280",
+                        "outline": "#e5e7eb"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                    },
+                    borderRadius: {
+                        "card": "1.5rem",
+                        "sidebar": "3rem"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .editorial-shadow {
+            box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.04);
+        }
+    </style>
+</head>
+<body class="bg-white text-on-surface flex min-h-screen overflow-hidden">
+<!-- Left Sidebar Navigation (Matching SCREEN_8) -->
+<aside class="h-[calc(100vh-2rem)] w-28 bg-primary rounded-sidebar m-4 flex flex-col items-center py-8 gap-10 text-white shrink-0">
+<div class="w-12 h-12 bg-white rounded-full flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-primary text-3xl material-symbols-fill">restaurant</span>
+</div>
+<nav class="flex flex-col gap-8 flex-1">
+<a class="flex flex-col items-center gap-1 opacity-60 hover:opacity-100 transition-opacity" href="#">
+<span class="material-symbols-outlined text-2xl">restaurant_menu</span>
+<span class="text-[10px] font-bold">Menu</span>
+</a>
+<a class="flex flex-col items-center gap-1 opacity-60 hover:opacity-100 transition-opacity" href="#">
+<span class="material-symbols-outlined text-2xl">grid_view</span>
+<span class="text-[10px] font-bold">Table</span>
+</a>
+<a class="flex flex-col items-center gap-1 opacity-60 hover:opacity-100 transition-opacity" href="#">
+<span class="material-symbols-outlined text-2xl">assignment</span>
+<span class="text-[10px] font-bold">Order List</span>
+</a>
+<a class="flex flex-col items-center gap-1 opacity-60 hover:opacity-100 transition-opacity" href="#">
+<span class="material-symbols-outlined text-2xl">history</span>
+<span class="text-[10px] font-bold">Order History</span>
+</a>
+<a class="flex flex-col items-center gap-1 opacity-100" href="#">
+<span class="material-symbols-outlined text-2xl material-symbols-fill">bar_chart</span>
+<span class="text-[10px] font-bold">Report</span>
+</a>
+</nav>
+<a class="flex flex-col items-center gap-1 opacity-60 hover:opacity-100 transition-opacity" href="#">
+<span class="material-symbols-outlined text-2xl">settings</span>
+<span class="text-[10px] font-bold">Settings</span>
+</a>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 min-h-screen flex flex-col overflow-y-auto no-scrollbar px-6 pt-6 bg-surface/30">
+<!-- Top Search Bar & Profile (Matching SCREEN_8) -->
+<header class="flex justify-between items-center mb-8 sticky top-0 z-10 py-2">
+<div class="relative w-full max-w-md">
+<input class="w-full pl-6 pr-12 py-3.5 bg-surface-variant/50 border-none rounded-full text-sm placeholder-on-surface-variant focus:ring-1 focus:ring-primary/20" placeholder="Search orders, tables, or stock..." type="text"/>
+<span class="material-symbols-outlined absolute right-6 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">search</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+<span class="material-symbols-outlined text-xl">wifi</span>
+</div>
+<div class="flex items-center gap-3 bg-white border border-outline rounded-full pl-2 pr-4 py-1.5 cursor-pointer shadow-sm">
+<img alt="User" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCi3JW01tOT4WwKJoy-Aql2GUTWvPA_7RFe2Z31AuUk3Qhd7Q8ROBwW8eebihhCJDokaSRjZo5GLbuAY6aaaaAM9i6aonPlcf1x78mWw4tU4A7SlmDEabZhkgwG0WI_m35VC_muxLD7pOCbHY-5XajUdhRwstvqXeFkg-b7isCwYsaA2WaUlqaJYpRa5aVeKEvS3E6fTNYaavmVpX8FbZfXBWMsxuSEij74P_r8-j8JpMJaFDOIMovUgRl4g3g9v9WdEuTMhiPZcDM"/>
+<div class="leading-none">
+<p class="text-xs font-bold">Admin User</p>
+<p class="text-[10px] text-on-surface-variant">Station Chief</p>
+</div>
+<span class="material-symbols-outlined text-sm">expand_more</span>
+</div>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="space-y-10 pb-10">
+<!-- Metric Row -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Today's Revenue -->
+<div class="bg-white p-6 rounded-card editorial-shadow border border-outline/50 relative overflow-hidden group">
+<div class="absolute top-0 left-0 w-1.5 h-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="flex justify-between items-start mb-6">
+<div class="w-10 h-10 bg-red-50 rounded-full flex items-center justify-center text-primary">
+<span class="material-symbols-outlined material-symbols-fill">payments</span>
+</div>
+<span class="flex items-center text-[10px] font-bold text-green-600 bg-green-50 px-2.5 py-1 rounded-full">
+<span class="material-symbols-outlined text-sm mr-0.5">trending_up</span>
+                        +12.5%
+                    </span>
+</div>
+<p class="text-xs font-bold text-on-surface-variant/80 uppercase tracking-wider">Today's Revenue</p>
+<h2 class="text-2xl font-extrabold mt-1">Rp 42.850.000</h2>
+<p class="text-[10px] text-on-surface-variant mt-2 font-medium">vs yesterday Rp 38.120.000</p>
+</div>
+<!-- Total Orders -->
+<div class="bg-white p-6 rounded-card editorial-shadow border border-outline/50">
+<div class="flex justify-between items-start mb-6">
+<div class="w-10 h-10 bg-orange-50 rounded-full flex items-center justify-center text-orange-500">
+<span class="material-symbols-outlined material-symbols-fill">receipt_long</span>
+</div>
+<span class="flex items-center text-[10px] font-bold text-green-600 bg-green-50 px-2.5 py-1 rounded-full">
+<span class="material-symbols-outlined text-sm mr-0.5">trending_up</span>
+                        +8%
+                    </span>
+</div>
+<p class="text-xs font-bold text-on-surface-variant/80 uppercase tracking-wider">Total Orders</p>
+<h2 class="text-2xl font-extrabold mt-1">142</h2>
+<p class="text-[10px] text-on-surface-variant mt-2 font-medium">8 active in queue</p>
+</div>
+<!-- Average Order Value -->
+<div class="bg-white p-6 rounded-card editorial-shadow border border-outline/50">
+<div class="flex justify-between items-start mb-6">
+<div class="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center text-blue-500">
+<span class="material-symbols-outlined material-symbols-fill">analytics</span>
+</div>
+<span class="flex items-center text-[10px] font-bold text-red-600 bg-red-50 px-2.5 py-1 rounded-full">
+<span class="material-symbols-outlined text-sm mr-0.5">trending_down</span>
+                        -2.4%
+                    </span>
+</div>
+<p class="text-xs font-bold text-on-surface-variant/80 uppercase tracking-wider">Average Order Value</p>
+<h2 class="text-2xl font-extrabold mt-1">Rp 301.760</h2>
+<p class="text-[10px] text-on-surface-variant mt-2 font-medium">per ticket average</p>
+</div>
+</div>
+<!-- Main Grid Split -->
+<div class="grid grid-cols-1 lg:grid-cols-10 gap-8">
+<!-- Live Active Orders (60%) -->
+<div class="lg:col-span-6 space-y-6">
+<div class="flex items-end justify-between px-2">
+<div>
+<h3 class="text-xl font-extrabold">Live Active Orders</h3>
+<p class="text-on-surface-variant text-xs mt-1">Real-time floor status and preparation queue</p>
+</div>
+<button class="text-primary text-[11px] font-extrabold flex items-center hover:underline group">
+                        View All Floor
+                        <span class="material-symbols-outlined text-sm ml-1 group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+</button>
+</div>
+<div class="space-y-4">
+<!-- Table Card 1 -->
+<div class="bg-white p-4 rounded-2xl border border-outline/50 editorial-shadow flex items-center gap-5 transition-transform hover:scale-[1.01]">
+<div class="w-14 h-14 rounded-2xl bg-surface flex flex-col items-center justify-center border-l-4 border-primary">
+<span class="text-[9px] font-bold text-on-surface-variant">TABLE</span>
+<span class="text-lg font-extrabold">12</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between mb-1.5">
+<h4 class="text-sm font-extrabold">Premium Omakase Set</h4>
+<span class="text-sm font-extrabold text-primary">Rp 2.450.000</span>
+</div>
+<div class="flex items-center gap-4 text-[10px] font-bold text-on-surface-variant">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-xs">group</span> 4 Pax</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-xs">schedule</span> 14m wait</span>
+</div>
+</div>
+<div class="flex flex-col items-end gap-3">
+<span class="px-3 py-1 bg-orange-100 text-orange-600 rounded-full text-[9px] font-extrabold uppercase tracking-widest">Plating</span>
+<div class="w-6 h-6 rounded-full border-2 border-white bg-gray-200 overflow-hidden ring-1 ring-outline">
+<img alt="Staff" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCi74yG1e6EORzdt3bbCMRrS-BWb_zmcvNPVR6A0YBLrVJo-zpavb-fZ3ZFBrxC3C2qtJAb7-VYErRH4RsxwTvP7yEykSZwvsntL2jjMr9yBTTRWxQ7anak8eNyEqMYGgzgjx60lwlFdmgz7b1Xe2NdxFTzfUVf28IYpT7DDODEQXlIF9kYWdU1UZDeRDA2DLpaMfSh2fz_jJDxBy66tsyskGRev6-dBj8KXnpb1D4slrcj2wRFRjq_rYUgub_HhHKFy_Hxly8qcis"/>
+</div>
+</div>
+</div>
+<!-- Table Card 2 -->
+<div class="bg-white p-4 rounded-2xl border border-outline/50 editorial-shadow flex items-center gap-5 transition-transform hover:scale-[1.01]">
+<div class="w-14 h-14 rounded-2xl bg-surface flex flex-col items-center justify-center border-l-4 border-transparent">
+<span class="text-[9px] font-bold text-on-surface-variant">TABLE</span>
+<span class="text-lg font-extrabold">05</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between mb-1.5">
+<h4 class="text-sm font-extrabold">Aged Ribeye Platter</h4>
+<span class="text-sm font-extrabold text-primary">Rp 890.000</span>
+</div>
+<div class="flex items-center gap-4 text-[10px] font-bold text-on-surface-variant">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-xs">group</span> 2 Pax</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-xs">schedule</span> 28m wait</span>
+</div>
+</div>
+<div class="flex flex-col items-end gap-3">
+<span class="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-[9px] font-extrabold uppercase tracking-widest">Preparing</span>
+</div>
+</div>
+<!-- Table Card 3 -->
+<div class="bg-white p-4 rounded-2xl border border-outline/50 editorial-shadow flex items-center gap-5 transition-transform hover:scale-[1.01]">
+<div class="w-14 h-14 rounded-2xl bg-surface flex flex-col items-center justify-center border-l-4 border-transparent">
+<span class="text-[9px] font-bold text-on-surface-variant">TABLE</span>
+<span class="text-lg font-extrabold">18</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between mb-1.5">
+<h4 class="text-sm font-extrabold">Afternoon Tea Service</h4>
+<span class="text-sm font-extrabold text-primary">Rp 450.000</span>
+</div>
+<div class="flex items-center gap-4 text-[10px] font-bold text-on-surface-variant">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-xs">group</span> 3 Pax</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-xs">schedule</span> 42m wait</span>
+</div>
+</div>
+<div class="flex flex-col items-end gap-3">
+<span class="px-3 py-1 bg-green-100 text-green-600 rounded-full text-[9px] font-extrabold uppercase tracking-widest">Served</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Low Stock Alerts (40%) -->
+<div class="lg:col-span-4 space-y-6">
+<div class="px-2">
+<h3 class="text-xl font-extrabold">Low Stock Alerts</h3>
+<p class="text-on-surface-variant text-xs mt-1">Inventory items requiring immediate attention</p>
+</div>
+<div class="bg-white rounded-card editorial-shadow border border-outline/50 overflow-hidden">
+<!-- Ingredient 1 -->
+<div class="p-5 flex items-center gap-4 border-b border-outline/30">
+<img alt="Salmon" class="w-14 h-14 rounded-xl object-cover shrink-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCf9AnQDqNQAaOllTeQjSSj3yZKwudc0-30JrJfcPHgXKKhcT6MKDEb-bkX27c20fEydqBfpHQZkL9AeAzMjW48yOOig5xT0s5Nw7r3teJfPNghbIYsi3tWQXtQWGON8Ls3nBPVp6QhDSKdZD2dvXm9D2f0ddbJpF0pD0ZFx5ShZhgu47DOMAdeWHfFyzFpdzFCbyZr6uC2v77IXwWrJQm9gWjDv9QULjhAOjkTIjJsqcv_N0Q-pF9SEg1CTF9Sido6BPWH5SqkY9M"/>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start mb-2">
+<div class="truncate">
+<h5 class="text-sm font-extrabold truncate">Atlantic Salmon</h5>
+<p class="text-[9px] text-on-surface-variant font-bold uppercase tracking-widest">Sashimi Grade</p>
+</div>
+<span class="px-2 py-0.5 bg-red-600 text-white rounded text-[8px] font-black uppercase tracking-tighter">CRITICAL</span>
+</div>
+<div class="w-full h-1.5 bg-surface rounded-full overflow-hidden">
+<div class="h-full bg-red-600 w-[12%]"></div>
+</div>
+<div class="flex justify-between mt-1.5">
+<span class="text-[10px] font-extrabold text-red-600">1.2kg left</span>
+<span class="text-[10px] text-on-surface-variant font-medium">Min: 10kg</span>
+</div>
+</div>
+</div>
+<!-- Ingredient 2 -->
+<div class="p-5 flex items-center gap-4 border-b border-outline/30">
+<img alt="Ribeye" class="w-14 h-14 rounded-xl object-cover shrink-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuArzoMq52VWSi6k8jG97SqPFkfXNxsyl1NruGE_Rfyy2E0-E1PIP3f7C3byrTx6RDd9wRB37ZnDZ9M1zldaXWfbzGIZcqI2Okh7af2OZ7fKeua_kF8G0ZP-Km0Mvpk85pMrgPJ3z-9CC_hxRfWzx7tpjycK2vHgRJJeOGG7n35HAuqGM47SBn1SAOqqz6hI92zhQ3ySMVcPxDmY9gTpUtOBvFOmXg4QDw-NoumiTAgvbHBo60bba1oEMChMMXjG_qbxKzziI27i1j4"/>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start mb-2">
+<div class="truncate">
+<h5 class="text-sm font-extrabold truncate">Aged Ribeye</h5>
+<p class="text-[9px] text-on-surface-variant font-bold uppercase tracking-widest">30-Day Dry Aged</p>
+</div>
+<span class="px-2 py-0.5 bg-orange-500 text-white rounded text-[8px] font-black uppercase tracking-tighter">LOW</span>
+</div>
+<div class="w-full h-1.5 bg-surface rounded-full overflow-hidden">
+<div class="h-full bg-orange-500 w-[28%]"></div>
+</div>
+<div class="flex justify-between mt-1.5">
+<span class="text-[10px] font-extrabold text-orange-600">4.5kg left</span>
+<span class="text-[10px] text-on-surface-variant font-medium">Min: 15kg</span>
+</div>
+</div>
+</div>
+<!-- Ingredient 3 -->
+<div class="p-5 flex items-center gap-4 border-b border-outline/30">
+<img alt="Truffle" class="w-14 h-14 rounded-xl object-cover shrink-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCl2oCAryzCf5qXMO3NL_YC13cAfSOiKl_96qTYpoj0G2uJdJVOXmiqN188mQB53EXnWRTCSV8JbhB3BNl9VrH_qYznRha6S6LY4thSXH7mBz_7HXX0qNuCqxrAs2rtAaiYOISDD-XRYep9SlYwCbVYOejGNr4CXX3MGEoiFh0tYYbzKsLX4sPHShLXeraWfpo1TIgNN0CqjNvzTOx5d0o2rXOWZ9e4eJUPgC6sD8w9aYUfxZm6sjCrppxclF3tW4ZP8CVvkxZIuTI"/>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start mb-2">
+<div class="truncate">
+<h5 class="text-sm font-extrabold truncate">Truffle Oil</h5>
+<p class="text-[9px] text-on-surface-variant font-bold uppercase tracking-widest">Black Winter</p>
+</div>
+<span class="px-2 py-0.5 bg-orange-500 text-white rounded text-[8px] font-black uppercase tracking-tighter">LOW</span>
+</div>
+<div class="w-full h-1.5 bg-surface rounded-full overflow-hidden">
+<div class="h-full bg-orange-500 w-[35%]"></div>
+</div>
+<div class="flex justify-between mt-1.5">
+<span class="text-[10px] font-extrabold text-orange-600">2 Units left</span>
+<span class="text-[10px] text-on-surface-variant font-medium">Min: 6 Units</span>
+</div>
+</div>
+</div>
+<!-- CTA -->
+<div class="p-4 bg-surface/50">
+<button class="w-full bg-white border border-outline rounded-xl py-3 text-[11px] font-extrabold text-on-surface-variant uppercase tracking-widest hover:bg-white hover:shadow-sm hover:border-primary/20 transition-all">
+                            Open Inventory Manager
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Reports FAB (Styled to match POS action button) -->
+<button class="fixed bottom-10 right-10 bg-primary hover:bg-primary/90 text-white px-8 py-4 rounded-2xl shadow-xl shadow-primary/25 flex items-center gap-3 transition-all active:scale-[0.98] z-50">
+<span class="material-symbols-outlined text-xl material-symbols-fill">summarize</span>
+<span class="font-extrabold text-sm uppercase tracking-wider">System Reports</span>
+</button>
+</main>
+</body></html>
