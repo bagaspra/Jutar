@@ -27,7 +27,6 @@ import { toast } from "sonner";
 interface Category {
   id: string;
   name: string;
-  emoji: string;
 }
 
 interface RawMaterial {
@@ -73,11 +72,10 @@ export function ProductBuilder({ categories, materials }: ProductBuilderProps) {
       name: formData.get("name") as string,
       price: Number(formData.get("price")),
       category_id: formData.get("category_id") as string,
-      emoji: formData.get("emoji") as string,
     };
 
-    if (!productData.name || !productData.category_id || !productData.emoji) {
-      toast.error("Please fill in all required product fields.");
+    if (!productData.name || !productData.category_id) {
+      toast.error("Harap isi semua kolom produk yang wajib.");
       return;
     }
 
@@ -87,11 +85,11 @@ export function ProductBuilder({ categories, materials }: ProductBuilderProps) {
     startTransition(async () => {
       const result = await createProductWithRecipe(productData, validRecipeItems);
       if (result.success) {
-        toast.success("Product Created Successfully!");
+        toast.success("Produk Berhasil Dibuat!");
         setIsOpen(false);
         setRecipeItems([]);
       } else {
-        toast.error("Error", { description: result.error });
+        toast.error("Kesalahan", { description: result.error });
       }
     });
   };
@@ -100,9 +98,9 @@ export function ProductBuilder({ categories, materials }: ProductBuilderProps) {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger
         render={
-          <Button className="rounded-xl h-12 font-black gap-2 shadow-xl shadow-primary/20 scale-105 active:scale-95 transition-all">
+          <Button className="rounded-xl h-12 font-black gap-2 shadow-xl shadow-primary/20 scale-105 active:scale-95 transition-all font-heading">
             <Utensils className="size-5" />
-            Add New Product
+            Tambah Produk Baru
           </Button>
         }
       />
@@ -110,9 +108,9 @@ export function ProductBuilder({ categories, materials }: ProductBuilderProps) {
         <form onSubmit={handleSubmit} className="flex flex-col max-h-[90vh]">
           <div className="p-8 bg-primary/5 border-b border-primary/10">
             <DialogHeader className="space-y-1">
-              <DialogTitle className="text-3xl font-black tracking-tighter">Product Builder</DialogTitle>
+              <DialogTitle className="text-3xl font-black tracking-tighter font-heading">Pembuat Produk</DialogTitle>
               <DialogDescription className="font-medium text-muted-foreground">
-                Craft a new menu item with optional inventory tracking.
+                Buat menu baru dengan pelacakan inventaris opsional.
               </DialogDescription>
             </DialogHeader>
           </div>
@@ -121,23 +119,23 @@ export function ProductBuilder({ categories, materials }: ProductBuilderProps) {
             {/* Core Details */}
             <div className="grid grid-cols-2 gap-6">
               <div className="space-y-2 col-span-2">
-                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Product Name</Label>
-                <Input name="name" placeholder="e.g. Double Cheeseburger" required className="rounded-2xl h-12 bg-muted/50 border-none font-bold" />
+                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Nama Produk</Label>
+                <Input name="name" placeholder="Contoh: Double Cheeseburger" required className="rounded-2xl h-12 bg-muted/50 border-none font-bold" />
               </div>
               <div className="space-y-2 col-span-2 sm:col-span-1">
-                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Price ($)</Label>
-                <Input name="price" type="number" step="0.01" placeholder="9.99" required className="rounded-2xl h-12 bg-muted/50 border-none font-bold" />
+                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Harga (Rp)</Label>
+                <Input name="price" type="number" placeholder="50000" required className="rounded-2xl h-12 bg-muted/50 border-none font-bold" />
               </div>
               <div className="space-y-2 col-span-2 sm:col-span-1">
-                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Category</Label>
+                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Kategori</Label>
                 <Select name="category_id" required>
                   <SelectTrigger className="rounded-2xl h-12 bg-muted/50 border-none font-bold">
-                    <SelectValue placeholder="Select Tab..." />
+                    <SelectValue placeholder="Pilih Kategori..." />
                   </SelectTrigger>
                   <SelectContent className="rounded-[1.5rem] border-none shadow-2xl">
                     {categories.map((c) => (
                       <SelectItem key={c.id} value={c.id} className="font-bold py-3">
-                        {c.emoji} {c.name}
+                        {c.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -150,7 +148,7 @@ export function ProductBuilder({ categories, materials }: ProductBuilderProps) {
               <div className="flex items-center justify-between border-b border-muted pb-4">
                 <div className="flex items-center gap-3">
                   <Beaker className="size-5 text-primary" />
-                  <h3 className="font-black text-lg tracking-tight">Inventory Recipe</h3>
+                  <h3 className="font-black text-lg tracking-tight font-heading">Resep Inventaris</h3>
                 </div>
                 <Button 
                   type="button" 
@@ -159,14 +157,14 @@ export function ProductBuilder({ categories, materials }: ProductBuilderProps) {
                   onClick={addRecipeItem}
                   className="rounded-xl border-primary/20 text-primary hover:bg-primary/5 font-bold"
                 >
-                  <Plus className="size-4 mr-1" /> Add Ingredient
+                  <Plus className="size-4 mr-1" /> Tambah Bahan
                 </Button>
               </div>
 
               {recipeItems.length === 0 ? (
                 <div className="py-8 text-center bg-muted/30 rounded-3xl border-2 border-dashed border-muted">
-                  <p className="text-sm font-bold text-muted-foreground">Standalone Product</p>
-                  <p className="text-[10px] uppercase tracking-widest text-muted-foreground/60 mt-1">No ingredients mapped</p>
+                  <p className="text-sm font-bold text-muted-foreground">Produk Standalone</p>
+                  <p className="text-[10px] uppercase tracking-widest text-muted-foreground/60 mt-1">Tidak ada bahan yang dipetakan</p>
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -178,7 +176,7 @@ export function ProductBuilder({ categories, materials }: ProductBuilderProps) {
                           onValueChange={(val) => updateRecipeItem(index, "raw_material_id", val)}
                         >
                           <SelectTrigger className="rounded-xl h-12 bg-muted/50 border-none font-medium">
-                            <SelectValue placeholder="Ingredient..." />
+                            <SelectValue placeholder="Bahan Baku..." />
                           </SelectTrigger>
                           <SelectContent className="rounded-xl border-none shadow-xl">
                             {materials.map((m) => (
@@ -219,9 +217,9 @@ export function ProductBuilder({ categories, materials }: ProductBuilderProps) {
               <Button 
                 type="submit" 
                 disabled={isPending} 
-                className="w-full h-16 rounded-2xl bg-primary hover:bg-primary/90 font-black text-xl shadow-xl shadow-primary/20 active:scale-95 transition-all"
+                className="w-full h-16 rounded-2xl bg-primary hover:bg-primary/90 font-black text-xl shadow-xl shadow-primary/20 active:scale-95 transition-all font-heading"
               >
-                {isPending ? <Loader2 className="animate-spin size-6" /> : "Finalize & Add Product"}
+                {isPending ? <Loader2 className="animate-spin size-6" /> : "Simpan & Tambah Produk"}
               </Button>
             </DialogFooter>
           </div>

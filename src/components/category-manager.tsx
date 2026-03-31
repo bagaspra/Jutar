@@ -27,7 +27,6 @@ import { toast } from "sonner";
 interface Category {
   id: string;
   name: string;
-  emoji: string;
 }
 
 interface CategoryManagerProps {
@@ -43,37 +42,36 @@ export function CategoryManager({ categories }: CategoryManagerProps) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const name = formData.get("name") as string;
-    const emoji = formData.get("emoji") as string;
 
-    if (!name || !emoji) {
-      toast.error("Please fill in both name and emoji.");
+    if (!name) {
+      toast.error("Harap isi nama kategori.");
       return;
     }
 
     startTransition(async () => {
       const result = editingCategory
-        ? await updateCategory(editingCategory.id, name, emoji)
-        : await createCategory(name, emoji);
+        ? await updateCategory(editingCategory.id, name)
+        : await createCategory(name);
 
       if (result.success) {
-        toast.success(editingCategory ? "Category Updated" : "Category Created");
+        toast.success(editingCategory ? "Kategori Diperbarui" : "Kategori Dibuat");
         setIsOpen(false);
         setEditingCategory(null);
       } else {
-        toast.error("Error", { description: result.error });
+        toast.error("Kesalahan", { description: result.error });
       }
     });
   };
 
   const handleDelete = (id: string) => {
-    if (!confirm("Are you sure you want to delete this category?")) return;
+    if (!confirm("Apakah Anda yakin ingin menghapus kategori ini?")) return;
 
     startTransition(async () => {
       const result = await deleteCategory(id);
       if (result.success) {
-        toast.success("Category Deleted");
+        toast.success("Kategori Dihapus");
       } else {
-        toast.error("Error", { description: result.error });
+        toast.error("Kesalahan", { description: result.error });
       }
     });
   };
@@ -81,9 +79,9 @@ export function CategoryManager({ categories }: CategoryManagerProps) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-black tracking-tight flex items-center gap-2">
+        <h2 className="text-xl font-black tracking-tight flex items-center gap-2 font-heading">
           <FolderEdit className="size-5 text-primary" />
-          Menu Categories
+          Kategori Menu
         </h2>
         
         <Dialog open={isOpen} onOpenChange={(open) => {
@@ -94,44 +92,30 @@ export function CategoryManager({ categories }: CategoryManagerProps) {
             render={
               <Button className="rounded-xl h-10 font-bold gap-2">
                 <Plus className="size-4" />
-                Add Category
+                Tambah Kategori
               </Button>
             }
           />
           <DialogContent className="sm:max-w-[425px] rounded-[2rem] border-none shadow-2xl">
             <form onSubmit={handleSubmit}>
               <DialogHeader>
-                <DialogTitle className="text-2xl font-black tracking-tighter">
-                  {editingCategory ? "Edit Category" : "New Category"}
+                <DialogTitle className="text-2xl font-black tracking-tighter font-heading">
+                  {editingCategory ? "Ubah Kategori" : "Kategori Baru"}
                 </DialogTitle>
                 <DialogDescription className="font-medium text-muted-foreground">
-                  Give your menu category a name and a fresh emoji.
+                  Berikan nama untuk kategori menu baru Anda.
                 </DialogDescription>
               </DialogHeader>
               <div className="grid gap-6 py-8">
                 <div className="grid gap-2">
                   <label htmlFor="name" className="font-bold text-[10px] uppercase tracking-widest text-muted-foreground">
-                    Category Name
+                    Nama Kategori
                   </label>
                   <Input
                     id="name"
                     name="name"
                     defaultValue={editingCategory?.name}
-                    placeholder="e.g. Burgers, Drinks"
-                    className="rounded-xl h-12 bg-muted/50 border-none font-bold"
-                    required
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <label htmlFor="emoji" className="font-bold text-[10px] uppercase tracking-widest text-muted-foreground">
-                    Category Emoji
-                  </label>
-                  <Input
-                    id="emoji"
-                    name="emoji"
-                    defaultValue={editingCategory?.emoji}
-                    placeholder="e.g. 🍔, 🥤"
-                    maxLength={2}
+                    placeholder="Contoh: Burger, Minuman"
                     className="rounded-xl h-12 bg-muted/50 border-none font-bold"
                     required
                   />
@@ -139,7 +123,7 @@ export function CategoryManager({ categories }: CategoryManagerProps) {
               </div>
               <DialogFooter>
                 <Button type="submit" disabled={isPending} className="w-full h-14 rounded-2xl bg-primary hover:bg-primary/90 font-black text-lg shadow-lg shadow-primary/20 transition-all">
-                  {isPending ? <Loader2 className="animate-spin" /> : editingCategory ? "Save Changes" : "Create Category"}
+                  {isPending ? <Loader2 className="animate-spin" /> : editingCategory ? "Simpan Perubahan" : "Buat Kategori"}
                 </Button>
               </DialogFooter>
             </form>
@@ -151,16 +135,14 @@ export function CategoryManager({ categories }: CategoryManagerProps) {
         <Table>
           <TableHeader>
             <TableRow className="bg-muted/30 border-none">
-              <TableHead className="w-16 text-center pl-8">Icon</TableHead>
-              <TableHead className="font-bold uppercase tracking-[0.2em] text-[10px] text-muted-foreground">Category Name</TableHead>
-              <TableHead className="text-right pr-8 font-bold uppercase tracking-[0.2em] text-[10px] text-muted-foreground">Actions</TableHead>
+              <TableHead className="font-bold uppercase tracking-[0.2em] text-[10px] text-muted-foreground pl-8">Nama Kategori</TableHead>
+              <TableHead className="text-right pr-8 font-bold uppercase tracking-[0.2em] text-[10px] text-muted-foreground">Aksi</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {categories.map((category) => (
               <TableRow key={category.id} className="hover:bg-muted/10 transition-all h-16 border-muted/20">
-                <TableCell className="text-center text-3xl pl-8">{category.emoji}</TableCell>
-                <TableCell className="font-black text-foreground">{category.name}</TableCell>
+                <TableCell className="font-black text-foreground pl-8">{category.name}</TableCell>
                 <TableCell className="text-right pr-8 space-x-2">
                   <Button 
                     variant="ghost" 

@@ -27,28 +27,27 @@ export default async function CashierPage() {
     id: p.id,
     name: p.name,
     price: Number(p.price),
-    category: p.categories?.slug || "uncategorized",
-    emoji: p.categories?.emoji || "🍔",
+    category: p.categories?.slug || "tanpa-kategori",
   }));
 
   return (
     <main className="min-h-screen bg-background flex flex-col h-screen overflow-hidden">
       {/* Header Bar */}
       <header className="h-20 bg-white/50 backdrop-blur-md border-b flex items-center justify-between px-8 shrink-0">
-        <div className="flex items-center gap-3">
-          <div className="size-10 bg-primary rounded-xl flex items-center justify-center text-2xl shadow-lg shadow-primary/20">
-            🍔
+          <div className="flex items-center gap-3">
+            <div className="size-10 bg-primary rounded-xl flex items-center justify-center text-2xl shadow-lg shadow-primary/20">
+              🏪
+            </div>
+            <div className="flex flex-col">
+              <h1 className="text-xl font-black text-foreground tracking-tight leading-none pt-1 font-heading">JuRasa</h1>
+              <span className="text-[10px] uppercase tracking-widest font-black text-primary/60">Terminal POS</span>
+            </div>
           </div>
-          <div className="flex flex-col">
-            <h1 className="text-xl font-black text-foreground tracking-tight leading-none pt-1">JuRasa</h1>
-            <span className="text-[10px] uppercase tracking-widest font-black text-primary/60">Modern POS Terminal</span>
-          </div>
-        </div>
         
         <div className="hidden md:flex items-center gap-6">
           <div className="text-right">
             <p className="text-xs font-bold text-muted-foreground leading-none">Terminal #01</p>
-            <p className="text-[10px] text-primary/60 font-black uppercase tracking-tighter">Fast Food Edition</p>
+            <p className="text-[10px] text-primary/60 font-black uppercase tracking-tighter">Edisi Fast Food</p>
           </div>
           <div className="size-10 rounded-full bg-muted flex items-center justify-center border-2 border-white shadow-sm overflow-hidden">
             <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="User" />

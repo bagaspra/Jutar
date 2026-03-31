@@ -1,105 +1,107 @@
 "use client";
 
-import { MenuItem } from "@/types";
+import { useEffect } from "react";
+import { formatCurrency } from "@/lib/utils";
 
 interface ReceiptProps {
   order: {
-    receipt_number: string;
-    total_amount: number;
-    created_at: string;
+    receiptNumber: string;
+    queueNumber: string | number;
+    items: any[];
+    total: number;
+    date: string;
   };
-  items: (MenuItem & { quantity: number })[];
+  onClose: () => void;
+  autoPrint?: boolean;
 }
 
-export function Receipt({ order, items }: ReceiptProps) {
-  const queueNumber = order.receipt_number.slice(-4);
-  const date = new Date(order.created_at).toLocaleString();
+export function Receipt({ order, onClose, autoPrint = true }: ReceiptProps) {
+  useEffect(() => {
+    if (autoPrint) {
+      const timer = setTimeout(() => {
+        window.print();
+        onClose();
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [autoPrint, onClose]);
 
   return (
-    <div id="thermal-receipt" className="hidden print:block w-[80mm] p-4 bg-white text-black font-mono text-[12px] leading-tight mx-auto">
+    <div className="receipt-container bg-white p-4 max-w-[80mm] mx-auto text-black font-mono text-sm leading-tight">
       {/* Header */}
       <div className="text-center mb-4">
-        <h1 className="text-xl font-bold uppercase tracking-widest">JuRasa Express</h1>
-        <p>123 Fast Food Lane, City</p>
-        <p>Tel: (555) 0123-4567</p>
+        <h1 className="text-xl font-bold uppercase tracking-tighter">JuRasa Express</h1>
+        <p className="text-[10px]">Jl. Makanan Cepat No. 123</p>
+        <p className="text-[10px]">Telp: 021-1234567</p>
       </div>
 
-      <div className="border-t border-b border-black border-dashed py-2 mb-4 text-center">
-        <p className="text-[10px] uppercase font-bold">Queue Number</p>
-        <p className="text-4xl font-black">{queueNumber}</p>
+      <div className="border-t border-dashed my-2" />
+
+      {/* Queue Number - CRITICAL FOR PRODUCTION */}
+      <div className="text-center my-4 py-2 border-2 border-black rounded-lg">
+        <p className="text-[10px] font-bold uppercase">Nomor Antrean</p>
+        <h2 className="text-5xl font-black">{order.queueNumber}</h2>
       </div>
 
-      {/* Order Info */}
-      <div className="mb-4 space-y-1">
-        <div className="flex justify-between">
-          <span>Receipt:</span>
-          <span className="font-bold">{order.receipt_number}</span>
-        </div>
-        <div className="flex justify-between">
-          <span>Date:</span>
-          <span>{date}</span>
-        </div>
+      <div className="border-t border-dashed my-2" />
+
+      {/* Meta Info */}
+      <div className="flex justify-between text-[10px] mb-4">
+        <span>No: {order.receiptNumber}</span>
+        <span>{new Date(order.date).toLocaleString('id-ID')}</span>
       </div>
 
-      {/* Items Table */}
-      <div className="border-t border-black border-dashed pt-2 mb-4">
-        <table className="w-full text-left">
-          <thead>
-            <tr className="border-b border-black border-dotted">
-              <th className="font-bold py-1">Item</th>
-              <th className="font-bold py-1 text-center">Qty</th>
-              <th className="font-bold py-1 text-right">Price</th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((item, idx) => (
-              <tr key={idx}>
-                <td className="py-1 pr-2">{item.name}</td>
-                <td className="py-1 text-center">{item.quantity}</td>
-                <td className="py-1 text-right">${(item.price * item.quantity).toFixed(2)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      {/* Items */}
+      <div className="space-y-1 mb-4">
+        {order.items.map((item: any, idx: number) => (
+          <div key={idx} className="flex justify-between">
+            <div className="flex-1 pr-2">
+              <p className="font-bold">{item.name}</p>
+              <p className="text-[10px]">{item.quantity} x {formatCurrency(item.price)}</p>
+            </div>
+            <span className="tabular-nums font-bold self-end text-sm">
+              {formatCurrency(item.price * item.quantity)}
+            </span>
+          </div>
+        ))}
       </div>
+
+      <div className="border-t border-dashed my-2" />
 
       {/* Totals */}
-      <div className="border-t border-black border-dashed pt-2 space-y-1">
-        <div className="flex justify-between font-bold text-lg">
-          <span>TOTAL PAiD:</span>
-          <span>${order.total_amount.toFixed(2)}</span>
-        </div>
-        <div className="flex justify-between text-[10px]">
-          <span>Payment Method:</span>
-          <span className="uppercase">Cash</span>
+      <div className="space-y-1">
+        <div className="flex justify-between font-bold text-base pt-2">
+          <span>TOTAL</span>
+          <span className="tabular-nums">{formatCurrency(order.total)}</span>
         </div>
       </div>
+
+      <div className="border-t border-dashed my-4" />
 
       {/* Footer */}
-      <div className="mt-8 text-center space-y-1 opacity-80 text-[10px]">
-        <p className="font-bold">THANK YOU FOR YOUR ORDER!</p>
-        <p>Please wait for your number to be called.</p>
-        <p>Download our app for 10% off next visit.</p>
+      <div className="text-center space-y-1">
+        <p className="text-[10px] font-bold italic">Terima Kasih Atas Kunjungan Anda!</p>
+        <p className="text-[10px]">Nikmati Hidangan Anda</p>
       </div>
 
-      {/* Print-specific CSS to force 80mm width and hide everything else */}
+      {/* Print Styles */}
       <style jsx global>{`
         @media print {
           body * {
             visibility: hidden;
-            background: white !important;
           }
-          #thermal-receipt, #thermal-receipt * {
+          .receipt-container, .receipt-container * {
             visibility: visible;
           }
-          #thermal-receipt {
+          .receipt-container {
             position: absolute;
             left: 0;
             top: 0;
-            width: 80mm !important;
-            padding: 10mm !important;
-            margin: 0 !important;
-            box-shadow: none !important;
+            width: 80mm;
+            padding: 0;
+            margin: 0;
+            box-shadow: none;
+            border: none;
           }
           @page {
             size: 80mm auto;

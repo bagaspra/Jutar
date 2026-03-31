@@ -17,6 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import { toggleProductStatus, updateProductPrice } from "@/actions/menu-actions";
 import { toast } from "sonner";
 import { Loader2, Save, ShoppingBag } from "lucide-react";
+import { formatCurrency } from "@/lib/utils";
 
 interface Product {
   id: string;
@@ -24,7 +25,6 @@ interface Product {
   category_id: string;
   categories?: {
     name: string;
-    emoji: string;
   };
   price: number;
   is_active: boolean;
@@ -38,20 +38,20 @@ export function MenuManagementTable({ products }: MenuManagementTableProps) {
   return (
     <Card className="shadow-2xl border-none overflow-hidden col-span-full">
       <CardHeader className="bg-primary/10 border-b border-primary/10 flex flex-row items-center justify-between">
-        <CardTitle className="text-2xl font-black flex items-center gap-3">
+        <CardTitle className="text-2xl font-black flex items-center gap-3 font-heading">
           <ShoppingBag className="size-6 text-primary" />
-          Menu Management
+          Manajemen Menu
         </CardTitle>
-        <Badge variant="outline" className="border-primary/30 text-primary bg-primary/5 uppercase tracking-widest text-[10px]">Active Products</Badge>
+        <Badge variant="outline" className="border-primary/30 text-primary bg-primary/5 uppercase tracking-widest text-[10px]">Produk Aktif</Badge>
       </CardHeader>
       <CardContent className="p-0">
         <Table>
           <TableHeader className="bg-muted/50">
             <TableRow>
-              <TableHead className="font-bold pl-8">Product Name</TableHead>
-              <TableHead className="font-bold">Category</TableHead>
+              <TableHead className="font-bold pl-8">Nama Produk</TableHead>
+              <TableHead className="font-bold">Kategori</TableHead>
               <TableHead className="font-bold text-center">Status</TableHead>
-              <TableHead className="font-bold text-right pr-8">Price ($)</TableHead>
+              <TableHead className="font-bold text-right pr-8">Harga</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -73,9 +73,9 @@ function ProductRow({ product }: { product: Product }) {
     startTransition(async () => {
       const result = await toggleProductStatus(product.id, product.is_active);
       if (result.error) {
-        toast.error("Update Failed", { description: result.error });
+        toast.error("Gagal Memperbarui", { description: result.error });
       } else {
-        toast.success(`${product.name} is now ${!product.is_active ? "Visible" : "Hidden"}`);
+        toast.success(`${product.name} sekarang ${!product.is_active ? "Terlihat" : "Tersembunyi"}`);
       }
     });
   };
@@ -83,7 +83,7 @@ function ProductRow({ product }: { product: Product }) {
   const handlePriceUpdate = () => {
     const newPrice = parseFloat(price);
     if (isNaN(newPrice) || newPrice < 0) {
-      toast.error("Invalid Price", { description: "Price must be a positive number." });
+      toast.error("Harga Tidak Valid", { description: "Harga harus berupa angka positif." });
       setPrice(product.price.toString());
       return;
     }
@@ -91,9 +91,9 @@ function ProductRow({ product }: { product: Product }) {
     startTransition(async () => {
       const result = await updateProductPrice(product.id, newPrice);
       if (result.error) {
-        toast.error("Update Failed", { description: result.error });
+        toast.error("Gagal Memperbarui", { description: result.error });
       } else {
-        toast.success(`Price updated for ${product.name}`);
+        toast.success(`Harga diperbarui untuk ${product.name}`);
       }
     });
   };
@@ -103,13 +103,13 @@ function ProductRow({ product }: { product: Product }) {
       <TableCell className="font-black text-foreground pl-8 text-lg">{product.name}</TableCell>
       <TableCell>
         <Badge variant="secondary" className="bg-muted text-muted-foreground border-none font-bold uppercase text-[10px] tabular-nums">
-          {product.categories?.emoji} {product.categories?.name}
+          {product.categories?.name || "Lainnya"}
         </Badge>
       </TableCell>
       <TableCell className="text-center">
         <div className="flex items-center justify-center gap-3">
           <span className={`text-[10px] font-black uppercase tracking-tighter ${product.is_active ? "text-green-600" : "text-muted-foreground/40"}`}>
-            {product.is_active ? "Active" : "Hidden"}
+            {product.is_active ? "Aktif" : "Sembunyi"}
           </span>
           <Switch
             checked={product.is_active}
@@ -121,13 +121,16 @@ function ProductRow({ product }: { product: Product }) {
       </TableCell>
       <TableCell className="text-right pr-8">
         <div className="flex items-center justify-end gap-2 group-hover:translate-x-[-4px] transition-transform">
-          <Input
-            type="number"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            disabled={isPending}
-            className="w-24 h-10 rounded-xl bg-muted/50 border-none font-black text-right pr-3 focus-visible:ring-primary"
-          />
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] font-black text-primary/40">Rp</span>
+            <Input
+              type="number"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              disabled={isPending}
+              className="w-32 h-10 rounded-xl bg-muted/50 border-none font-black text-right pr-3 pl-8 focus-visible:ring-primary"
+            />
+          </div>
           <Button
             variant="ghost"
             size="icon"

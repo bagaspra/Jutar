@@ -1,96 +1,106 @@
 "use client";
 
 import { useState } from "react";
-import { login } from "./actions";
+import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Loader2, KeyRound } from "lucide-react";
+import { Lock, User, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 export default function LoginPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
     setLoading(true);
 
-    const formData = new FormData(event.currentTarget);
-    const result = await login(formData);
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
-    if (result?.error) {
-      toast.error("Authentication Failed", {
-        description: result.error,
-      });
+    if (error) {
+      toast.error("Masuk Gagal", { description: "Email atau kata sandi salah." });
       setLoading(false);
+    } else {
+      toast.success("Masuk Berhasil", { description: "Memuat Dashboard Admin..." });
+      router.push("/admin");
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-6">
-      <Card className="w-full max-w-md rounded-[2.5rem] border-none shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-500">
-        <CardHeader className="space-y-4 pt-12 pb-8 text-center bg-primary/5">
-          <div className="mx-auto size-16 bg-primary rounded-2xl flex items-center justify-center text-4xl shadow-lg shadow-primary/20">
-            🔐
+    <main className="min-h-screen bg-muted/30 flex items-center justify-center p-4">
+      <div className="w-full max-w-md animate-in fade-in zoom-in duration-500">
+        <div className="flex flex-col items-center mb-8 gap-4">
+          <div className="size-16 bg-primary rounded-3xl flex items-center justify-center text-4xl shadow-2xl shadow-primary/20 rotate-3">
+             🔒
           </div>
-          <div className="space-y-1">
-            <CardTitle className="text-3xl font-black tracking-tighter">JuRasa Backoffice</CardTitle>
-            <CardDescription className="text-muted-foreground font-bold uppercase tracking-widest text-[10px]">
-              Secured Administrator Access
-            </CardDescription>
+          <div className="text-center">
+            <h1 className="text-3xl font-black tracking-tighter uppercase font-heading">JuRasa Backoffice</h1>
+            <p className="text-xs text-muted-foreground font-black uppercase tracking-[0.2em] mt-1 italic">Akses Terbatas</p>
           </div>
-        </CardHeader>
-        <CardContent className="pt-10 px-10">
-          <form id="login-form" onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="email" className="font-bold text-[10px] uppercase tracking-widest text-muted-foreground pl-1">Email Address</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="admin@jurasa.pos"
-                required
-                className="h-14 rounded-2xl border-none bg-muted/50 focus-visible:ring-primary font-bold px-6"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password" className="font-bold text-[10px] uppercase tracking-widest text-muted-foreground pl-1">Password</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                required
-                className="h-14 rounded-2xl border-none bg-muted/50 focus-visible:ring-primary font-bold px-6"
-              />
-            </div>
-          </form>
-        </CardContent>
-        <CardFooter className="pb-12 pt-4 px-10">
-          <Button
-            type="submit"
-            form="login-form"
-            disabled={loading}
-            className="w-full h-16 rounded-[1.5rem] text-lg font-black bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/20 active:scale-95 transition-all"
-          >
-            {loading ? (
-              <Loader2 className="size-6 animate-spin" />
-            ) : (
-              <>
-                Continue to Admin
-                <KeyRound className="size-5 ml-2" />
-              </>
-            )}
-          </Button>
-        </CardFooter>
-      </Card>
-    </div>
+        </div>
+
+        <Card className="rounded-[2.5rem] border-none shadow-2xl overflow-hidden ring-1 ring-black/5">
+          <CardHeader className="bg-muted/10 pb-4">
+            <CardTitle className="text-2xl font-black font-heading">Otentikasi Admin</CardTitle>
+            <CardDescription className="font-medium">Silakan masuk untuk mengelola inventaris dan menu.</CardDescription>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <form onSubmit={handleLogin} className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="email" className="font-bold text-[10px] uppercase tracking-widest text-muted-foreground ml-1">Email</Label>
+                <div className="relative group">
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                  <Input 
+                    id="email"
+                    type="email" 
+                    placeholder="nama@contoh.com" 
+                    className="h-12 pl-12 rounded-2xl bg-muted/50 border-none font-bold placeholder:font-medium placeholder:text-muted-foreground/40 focus-visible:ring-primary"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="password" className="font-bold text-[10px] uppercase tracking-widest text-muted-foreground ml-1">Kata Sandi</Label>
+                <div className="relative group">
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                  <Input 
+                    id="password"
+                    type="password" 
+                    placeholder="••••••••" 
+                    className="h-12 pl-12 rounded-2xl bg-muted/50 border-none font-bold placeholder:font-medium placeholder:text-muted-foreground/40 focus-visible:ring-primary"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+
+              <Button 
+                type="submit" 
+                className="w-full h-14 rounded-2xl bg-primary hover:bg-primary/90 font-black text-xl shadow-xl shadow-primary/20 transition-all active:scale-95 duration-300 font-heading"
+                disabled={loading}
+              >
+                {loading ? <Loader2 className="animate-spin" /> : "Masuk Sekarang"}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+        
+        <p className="text-center text-[11px] text-muted-foreground mt-8 font-medium uppercase tracking-[0.1em]">
+          JuRasa POS © 2026 • Dirancang untuk Efisiensi
+        </p>
+      </div>
+    </main>
   );
 }

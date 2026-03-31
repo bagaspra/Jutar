@@ -17,7 +17,7 @@ const generateSlug = (name: string) => {
 /**
  * Creates a new category
  */
-export async function createCategory(name: string, emoji: string) {
+export async function createCategory(name: string) {
   const supabase = await createClient();
 
   // 0. Auth check
@@ -30,7 +30,7 @@ export async function createCategory(name: string, emoji: string) {
 
   const { data, error } = await supabase
     .from("categories")
-    .insert({ name, slug, emoji })
+    .insert({ name, slug })
     .select()
     .single();
 
@@ -47,7 +47,7 @@ export async function createCategory(name: string, emoji: string) {
 /**
  * Updates an existing category
  */
-export async function updateCategory(id: string, name: string, emoji: string) {
+export async function updateCategory(id: string, name: string) {
   const supabase = await createClient();
 
   // 0. Auth check
@@ -60,7 +60,7 @@ export async function updateCategory(id: string, name: string, emoji: string) {
 
   const { data, error } = await supabase
     .from("categories")
-    .update({ name, slug, emoji })
+    .update({ name, slug })
     .eq("id", id)
     .select()
     .single();
