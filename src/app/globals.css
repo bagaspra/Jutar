@@ -82,27 +82,92 @@
     size: 80mm auto;
   }
 
-  /* High-level visibility control to avoid collapsing nested containers */
+  /* Force pure B&W for thermal printers */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Hide default browser headers/footers */
+  html, body {
+    width: 80mm;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* 
+     Visibility Whitelist Strategy:
+     Hides everything by default, but allows specific 
+     printable IDs and their children to break out.
+  */
   body {
     visibility: hidden !important;
     background: white !important;
+    overflow: visible !important;
+    height: auto !important;
+    position: static !important;
   }
 
-  /* Target the invoice container specifically */
-  #printable-invoice {
+  html {
+     overflow: visible !important;
+     height: auto !important;
+  }
+
+  /* Target the printable containers specifically */
+  #printable-invoice, #z-report {
     visibility: visible !important;
     display: block !important;
-    position: fixed !important;
+    position: absolute !important;
     left: 0 !important;
     top: 0 !important;
     width: 80mm !important;
     margin: 0 !important;
-    padding: 0 !important; /* Managed by component internal padding */
+    padding: 0 !important; /* Reset padding for precise 80mm flow */
     z-index: 9999;
+    background: white !important;
+    overflow: visible !important;
+    height: auto !important;
   }
 
-  /* Ensure all internal properties are revealed */
-  #printable-invoice * {
+  #printable-invoice *, #z-report * {
     visibility: visible !important;
+    color: black !important;
+    border-color: black !important;
+  }
+
+  /* Ensure standard UI is hidden */
+  .print-hidden {
+    display: none !important;
+  }
+
+  /* 
+     Radix/Shadcn Dialog Breakout:
+     Modals use position:fixed and max-h-screen which truncates 
+     print output. We force them to be static/absolute and 
+     visible during printing.
+  */
+  [role="dialog"], 
+  div[data-state="open"] {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    transform: none !important;
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    width: 80mm !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+
+  /* Hide Modal Backdrop/Overlay on print */
+  div[data-state="open"] > div:first-child[style*="opacity"] {
+    display: none !important;
   }
 }

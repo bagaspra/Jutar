@@ -4,7 +4,7 @@ import { StatCard } from "@/components/ui/stat-card";
 import { LowStockAlert } from "@/components/ui/low-stock-alert";
 import { ActiveOrderRow } from "@/components/features/active-order-row";
 import { createClient } from "@/utils/supabase/server";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, cn } from "@/lib/utils";
 
 export default async function AdminDashboard() {
   const supabase = await createClient();
@@ -51,6 +51,28 @@ export default async function AdminDashboard() {
     .order("created_at", { ascending: false })
     .limit(5);
 
+  // 5. Fetch Top Sold Products Today
+  const { data: topSellingProducts } = await supabase
+    .from("order_items")
+    .select("product_id, products(name, image_url)")
+    .gte("created_at", today.toISOString());
+
+  const productCounts: Record<string, { name: string; image: string; count: number }> = {};
+  topSellingProducts?.forEach((item: any) => {
+    if (!productCounts[item.product_id]) {
+      productCounts[item.product_id] = { 
+        name: item.products.name, 
+        image: item.products.image_url, 
+        count: 0 
+      };
+    }
+    productCounts[item.product_id].count++;
+  });
+
+  const sortedTopProducts = Object.values(productCounts)
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 3);
+
   return (
     <PageWrapper>
       <TopBar />
@@ -89,9 +111,9 @@ export default async function AdminDashboard() {
         </div>
 
         {/* Main Grid Split */}
-        <div className="grid grid-cols-1 lg:grid-cols-10 gap-8">
-          {/* Live Paid Orders (60%) */}
-          <div className="lg:col-span-6 space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+          {/* Live Paid Orders (8/12) */}
+          <div className="lg:col-span-8 space-y-6">
             <div className="flex items-end justify-between px-2">
               <div>
                 <h3 className="text-xl font-extrabold uppercase tracking-tight italic">Live Paid Orders</h3>
@@ -131,7 +153,7 @@ export default async function AdminDashboard() {
             </div>
           </div>
 
-          {/* Low Stock Alerts (40%) */}
+          {/* Low Stock Alerts (4/12) */}
           <div className="lg:col-span-4 space-y-6">
             <div className="px-2">
               <h3 className="text-xl font-extrabold uppercase tracking-tight italic">Inventory Alerts</h3>
@@ -156,11 +178,10 @@ export default async function AdminDashboard() {
                   );
                 })
               ) : (
-                <div className="h-64 flex flex-col items-center justify-center grayscale opacity-10 py-10 scale-90">
-                  <span className="material-symbols-outlined text-6xl mb-4">inventory_2</span>
+                <div className="h-48 flex flex-col items-center justify-center grayscale opacity-10 py-10 scale-90">
+                  <span className="material-symbols-outlined text-5xl mb-4">inventory_2</span>
                   <div className="text-center">
-                    <p className="text-xs font-black uppercase tracking-widest">Stock Levels Optimal</p>
-                    <p className="text-[10px] font-bold mt-1">All kitchen categories are full</p>
+                    <p className="text-[10px] font-black uppercase tracking-widest">Stock Levels Optimal</p>
                   </div>
                 </div>
               )}
@@ -170,6 +191,36 @@ export default async function AdminDashboard() {
                   Inventory Management
                 </button>
               </div>
+            </div>
+
+            {/* Daily Highlights Section */}
+            <div className="px-2 pt-4">
+              <h3 className="text-xl font-extrabold uppercase tracking-tight italic">Daily Highlights</h3>
+              <p className="text-on-surface-variant text-[10px] font-black uppercase tracking-widest mt-2 opacity-60">Top performing products today</p>
+            </div>
+
+            <div className="bg-white p-6 rounded-card shadow-xl border border-outline/10 space-y-5">
+               {sortedTopProducts.length > 0 ? (
+                 sortedTopProducts.map((p, i) => (
+                   <div key={p.name} className="flex items-center gap-4">
+                     <img src={p.image || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c"} alt={p.name} className="w-12 h-12 rounded-xl object-cover" />
+                     <div className="flex-1">
+                        <p className="text-xs font-black uppercase tracking-tight italic truncate">{p.name}</p>
+                        <p className="text-[10px] font-bold text-on-surface-variant/60">{p.count} units sold</p>
+                     </div>
+                     <div className={cn(
+                       "w-8 h-8 rounded-full flex items-center justify-center text-xs font-black italic",
+                       i === 0 ? "bg-primary text-white shadow-lg shadow-primary/20" : "bg-surface-variant text-on-surface-variant"
+                     )}>
+                       #{i + 1}
+                     </div>
+                   </div>
+                 ))
+               ) : (
+                 <div className="py-6 text-center opacity-20">
+                   <p className="text-[10px] font-black uppercase tracking-widest">Awaiting sales data</p>
+                 </div>
+               )}
             </div>
           </div>
         </div>

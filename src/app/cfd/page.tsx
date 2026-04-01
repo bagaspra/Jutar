@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase/client";
 import { CartItem } from "@/types";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, cn } from "@/lib/utils";
+import { UtensilsCrossed } from "lucide-react";
 
 export default function CustomerFacingDisplay() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
@@ -48,31 +49,31 @@ export default function CustomerFacingDisplay() {
         <div className="flex items-center gap-4">
           <div className="bg-green-50 text-green-700 px-6 py-2 rounded-full text-xs font-black flex items-center gap-2 border border-green-100 italic tracking-widest">
             <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-            LIVE SYNC
+            SINKRONISASI LANGSUNG
           </div>
           <div className="bg-primary/5 text-primary px-6 py-2 rounded-full text-xs font-black flex items-center gap-2 border border-primary/10 uppercase tracking-[0.2em]">
             <span className="material-symbols-outlined text-sm">
                {orderType === "dine_in" ? "restaurant" : "shopping_bag"}
             </span>
-            {orderType === "dine_in" ? "Dine In" : "Take Away"}
+            {orderType === "dine_in" ? "Makan di Tempat" : "Bawa Pulang"}
           </div>
         </div>
       </header>
 
       {/* Main Content: Centered Layout */}
-      <main className="flex-1 flex justify-center items-center p-8 bg-surface overflow-hidden">
-        <div className="w-full max-w-5xl h-full flex gap-8">
+      <main className="flex-1 flex justify-center items-center p-12 bg-surface overflow-hidden">
+        <div className="w-full max-w-[1400px] h-full flex gap-12">
           {/* Left: Order Summary */}
           <section className="flex-1 bg-white rounded-card shadow-sm border border-outline flex flex-col overflow-hidden editorial-shadow">
             <div className="p-10 border-b border-outline flex justify-between items-end">
               <div>
-                <h2 className="text-4xl font-black tracking-tight font-headline text-on-surface uppercase italic">Your Order</h2>
+                <h2 className="text-4xl font-black tracking-tight font-headline text-on-surface uppercase italic">Pesanan Anda</h2>
                 <p className="text-on-surface-variant font-bold text-xs mt-2 uppercase tracking-widest leading-loose opacity-60">
-                  Mirroring Cashier Terminal
+                  Sinkronisasi dari Kasir
                 </p>
               </div>
               <div className="text-right">
-                <p className="text-[10px] font-black text-on-surface-variant uppercase tracking-widest leading-none mb-1">Terminal Status</p>
+                <p className="text-[10px] font-black text-on-surface-variant uppercase tracking-widest leading-none mb-1">Status Terminal</p>
                 <p className="text-sm font-black text-on-surface">ONLINE • ST-001</p>
               </div>
             </div>
@@ -82,12 +83,18 @@ export default function CustomerFacingDisplay() {
               {cartItems.length > 0 ? (
                 cartItems.map((item) => (
                   <div key={item.id} className="flex items-start gap-8 animate-in slide-in-from-bottom duration-500">
-                    <div className="relative w-28 h-24 rounded-2xl overflow-hidden bg-surface-variant shrink-0 border border-outline/20">
-                      <img 
-                        alt={item.name} 
-                        className="w-full h-full object-cover" 
-                        src={item.image_url || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c"} 
-                      />
+                    <div className="relative w-28 h-24 rounded-2xl overflow-hidden bg-surface-variant shrink-0 border border-outline/20 flex items-center justify-center">
+                      {item.image_url ? (
+                        <img 
+                          alt={item.name} 
+                          className="w-full h-full object-cover" 
+                          src={item.image_url} 
+                        />
+                      ) : (
+                        <div className="opacity-20">
+                           <UtensilsCrossed className="size-10" />
+                        </div>
+                      )}
                     </div>
                     <div className="flex-1 min-w-0 pt-1">
                       <div className="flex justify-between items-start gap-4">
@@ -98,7 +105,7 @@ export default function CustomerFacingDisplay() {
                           <div className="mt-3">
                             <p className="text-sm text-on-surface-variant flex items-center gap-2">
                               <span className="font-black text-primary px-2 py-0.5 bg-primary/5 rounded-md">{item.quantity}x</span> 
-                              Serving per Order
+                              Sajian per Pesanan
                             </p>
                           </div>
                         </div>
@@ -113,9 +120,9 @@ export default function CustomerFacingDisplay() {
                 <div className="h-full flex flex-col items-center justify-center text-center space-y-8 animate-in fade-in duration-1000 opacity-20 grayscale">
                   <div className="size-48 bg-primary/5 rounded-[3rem] flex items-center justify-center text-9xl font-black text-primary/40 italic">JU</div>
                   <div className="space-y-4">
-                    <h2 className="text-4xl font-black text-on-surface tracking-tighter font-headline italic">WELCOME TO JURASA</h2>
+                    <h2 className="text-4xl font-black text-on-surface tracking-tighter font-headline italic">SELAMAT DATANG DI JURASA</h2>
                     <p className="text-xl text-on-surface-variant font-bold uppercase tracking-[0.2em] max-w-sm mx-auto leading-relaxed">
-                      Experience Fast-Food Gastronomy at its finest.
+                      Nikmati Pengalaman Gastronomi Cepat Saji Terbaik.
                     </p>
                   </div>
                 </div>
@@ -125,28 +132,28 @@ export default function CustomerFacingDisplay() {
             {/* Branding Message */}
             <div className="px-10 py-8 bg-surface-variant/30 text-center border-t border-outline">
               <p className="text-on-surface-variant font-black text-sm uppercase tracking-widest leading-loose italic">
-                Thank you for choosing JuRasa Gastronomy Experience
+                Terima kasih telah memilih Pengalaman Gastronomi JuRasa
               </p>
             </div>
           </section>
 
           {/* Right: Payment Breakdown */}
-          <section className="w-[380px] flex flex-col gap-6">
+          <section className="w-[450px] flex flex-col gap-8">
             <div className="bg-white rounded-card shadow-sm border border-outline p-10 flex flex-col h-full editorial-shadow">
-              <h3 className="text-xl font-black mb-10 font-headline uppercase tracking-tight italic border-b border-outline pb-6">Payment Summary</h3>
+              <h3 className="text-xl font-black mb-10 font-headline uppercase tracking-tight italic border-b border-outline pb-6">Ringkasan Pembayaran</h3>
               <div className="space-y-5 flex-1">
                 <div className="flex justify-between text-base font-black text-on-surface-variant/70 uppercase tracking-widest">
                   <span>Subtotal</span>
                   <span className="text-on-surface tabular-nums">{formatCurrency(subtotal)}</span>
                 </div>
                 <div className="flex justify-between text-base font-black text-on-surface-variant/70 uppercase tracking-widest">
-                   <span>Tax {orderType === "dine_in" ? "(10%)" : "(0%)"}</span>
+                   <span>Pajak {orderType === "dine_in" ? "(10%)" : "(0%)"}</span>
                   <span className="text-on-surface tabular-nums">{formatCurrency(tax)}</span>
                 </div>
                 
                 <div className="pt-10 mt-10 border-t border-outline/50">
                   <p className="text-xs font-black uppercase tracking-widest text-on-surface-variant/50 mb-3">
-                    Total Amount Due
+                    Total Pembayaran
                   </p>
                   <h1 className="text-6xl font-black font-headline tracking-tighter text-primary tabular-nums animate-pulse">
                     {formatCurrency(total)}
@@ -160,9 +167,9 @@ export default function CustomerFacingDisplay() {
                   </span>
                   <div>
                     <p className="text-[10px] font-black text-primary uppercase tracking-widest leading-none mb-2 italic">
-                       Terminal Ready
+                       Terminal Siap
                     </p>
-                    <p className="text-xs font-black text-on-surface uppercase tracking-tighter">Please Pay At Cashier</p>
+                    <p className="text-xs font-black text-on-surface uppercase tracking-tighter">Mohon Bayar di Kasir</p>
                   </div>
                 </div>
               </div>
@@ -174,7 +181,7 @@ export default function CustomerFacingDisplay() {
       {/* Global Footer */}
       <footer className="bg-white border-t border-outline flex justify-between items-center px-12 py-6 w-full z-50">
         <div className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant/50">
-          © 2026 JURASA GASTRONOMY SYSTEM • PREMIUM POS EXPERIENCE
+          © 2026 SISTEM GASTRONOMI JURASA • PENGALAMAN POS PREMIUM
         </div>
         <div className="flex gap-10">
           <span className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/30">

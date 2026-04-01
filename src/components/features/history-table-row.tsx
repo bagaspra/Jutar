@@ -41,10 +41,10 @@ export function HistoryTableRow({
           </span>
           <div className="flex flex-col">
             <span className="text-[10px] font-black uppercase tracking-widest text-on-surface">
-              {orderType === "dine_in" ? "Dine In" : "Take Away"}
+              {orderType === "dine_in" ? "Makan di Tempat" : "Bawa Pulang"}
             </span>
             <span className="text-[8px] font-bold text-on-surface-variant/50 uppercase tracking-widest">
-              {itemsCount} Items
+              {itemsCount} Menu
             </span>
           </div>
         </div>
@@ -55,7 +55,7 @@ export function HistoryTableRow({
       <td className="px-8 py-6">
         <Badge variant={status === "Completed" ? "green" : "orange"} className="flex gap-2 items-center w-fit px-4 py-1.5 rounded-full shadow-sm">
           <span className={`w-1.5 h-1.5 rounded-full ${status === "Completed" ? "bg-emerald-500 animate-pulse" : "bg-neutral-400"}`}></span>
-          {status}
+          {status === "Completed" ? "Selesai" : "Dibatalkan"}
         </Badge>
       </td>
       <td className="px-8 py-6">

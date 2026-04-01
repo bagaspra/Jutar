@@ -22,7 +22,7 @@ export interface Order {
   id: string;
   receipt_number: string;
   total_amount: number;
-  payment_method: string;
+  payment_method_id: string;
   status: string;
   created_at: string;
   order_type: "dine_in" | "take_away";

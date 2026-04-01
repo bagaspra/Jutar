@@ -1,5 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
-import { Sidebar } from "@/components/layout/sidebar";
+import { SidebarServerWrapper } from "@/components/layout/sidebar-server-wrapper";
 import { TopBar } from "@/components/layout/top-bar";
 import { OrderCart } from "@/components/features/order-cart";
 import { POSMenu } from "@/components/features/pos-menu";
@@ -38,10 +38,12 @@ export default async function CashierPage() {
   return (
     <div className="bg-white text-on-surface flex h-screen overflow-hidden font-body">
       {/* Left Sidebar Navigation */}
-      <Sidebar />
+      <div className="print-hidden">
+        <SidebarServerWrapper />
+      </div>
 
       {/* Main Content Area */}
-      <main className="flex-1 h-screen flex flex-col overflow-hidden px-6 pt-6 bg-surface/30">
+      <main className="flex-1 h-screen flex flex-col overflow-hidden px-6 pt-6 bg-surface/30 print-hidden">
         <TopBar />
 
         {/* Dynamic Menu & Categories Wrapper (Client Component) */}

@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Label } from "@/components/ui/label";
 import { Lock, User, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { signIn } from "@/actions/auth-actions";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -20,17 +21,19 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const result = await signIn(email, password);
 
-    if (error) {
-      toast.error("Masuk Gagal", { description: "Email atau kata sandi salah." });
+    if (!result.success) {
+      toast.error("Masuk Gagal", { description: result.error });
       setLoading(false);
     } else {
-      toast.success("Masuk Berhasil", { description: "Memuat Dashboard Admin..." });
-      router.push("/admin");
+      toast.success("Masuk Berhasil", { description: "Sedang menyambungkan ke dashboard..." });
+      
+      // Force refreshing the router to pick up the server-side cookies
+      router.refresh();
+      
+      // Use the role-aware path returned from the server
+      router.push(result.redirectPath!);
     }
   };
 

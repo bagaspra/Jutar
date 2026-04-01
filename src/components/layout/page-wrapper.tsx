@@ -1,16 +1,18 @@
-import { Sidebar } from "./sidebar";
+"use client";
 
 interface PageWrapperProps {
   children: React.ReactNode;
 }
 
+/**
+ * Since the persistent Sidebar and Main Layout are now handled 
+ * at the /admin/layout level, this component is now a pure
+ * presentational wrapper for the interior page content.
+ */
 export function PageWrapper({ children }: PageWrapperProps) {
   return (
-    <div className="bg-white text-on-surface flex min-h-screen overflow-hidden">
-      <Sidebar />
-      <main className="flex-1 min-h-screen flex flex-col overflow-y-auto no-scrollbar px-6 pt-6 bg-surface/30 print:hidden">
-        {children}
-      </main>
+    <div className="animate-in fade-in slide-in-from-bottom-5 duration-700">
+      {children}
     </div>
   );
 }

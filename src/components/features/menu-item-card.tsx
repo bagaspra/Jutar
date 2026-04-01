@@ -1,10 +1,12 @@
 import { cn } from "@/lib/utils";
+import { UtensilsCrossed } from "lucide-react";
+import { useState } from "react";
 
 interface MenuItemCardProps {
   name: string;
   description: string;
   price: string;
-  image: string;
+  image?: string | null;
   onClick?: () => void;
   className?: string;
 }
@@ -17,6 +19,7 @@ export function MenuItemCard({
   onClick,
   className,
 }: MenuItemCardProps) {
+  const [imageError, setImageError] = useState(false);
   return (
     <div 
       onClick={onClick}
@@ -25,12 +28,20 @@ export function MenuItemCard({
         className
       )}
     >
-      <div className="relative aspect-[4/3] mb-4 overflow-hidden rounded-card">
-        <img 
-          alt={name} 
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
-          src={image} 
-        />
+      <div className="relative aspect-[4/3] mb-4 overflow-hidden rounded-card bg-surface-variant/5 border border-outline/5 flex items-center justify-center">
+        {image && !imageError ? (
+          <img 
+            alt={name} 
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+            src={image} 
+            onError={() => setImageError(true)}
+          />
+        ) : (
+          <div className="flex flex-col items-center gap-2 opacity-20 group-hover:opacity-40 transition-opacity">
+            <UtensilsCrossed className="size-10" />
+            <span className="text-[8px] font-black uppercase tracking-widest">JuRasa Pos</span>
+          </div>
+        )}
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors"></div>
       </div>
       <div className="space-y-1.5 px-1">
