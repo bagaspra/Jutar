@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
-import { supabaseAdmin } from "@/utils/supabase/admin";
+import { createAdminClient } from "@/utils/supabase/admin";
 import { revalidatePath } from "next/cache";
 
 export type UserRole = "super_admin" | "inventory_admin" | "cashier";
@@ -28,6 +28,7 @@ export async function createUserAccount(
 ) {
   // 1. Create the user in Supabase Auth (Admin API)
   // We bypass RLS and trigger logic by using our pure Admin Client
+  const supabaseAdmin = createAdminClient();
   const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
     email,
     password: "JuRasa2026!", // Default secure password
@@ -67,6 +68,7 @@ export async function createUserAccount(
 
 export async function updateUserRole(userId: string, role: UserRole) {
   // Use the service role to bypass role escalation protection
+  const supabaseAdmin = createAdminClient();
   const { error } = await supabaseAdmin
     .from("profiles")
     .update({ role })
@@ -81,6 +83,7 @@ export async function updateUserRole(userId: string, role: UserRole) {
 }
 
 export async function updateUserProfile(userId: string, data: { name: string, role: UserRole }) {
+  const supabaseAdmin = createAdminClient();
   const { error } = await supabaseAdmin
     .from("profiles")
     .update({ 
@@ -102,6 +105,7 @@ export async function updateUserProfile(userId: string, data: { name: string, ro
 
 export async function deleteUserAccount(userId: string) {
   // Deleting from auth.users will cascade to the profile table
+  const supabaseAdmin = createAdminClient();
   const { error } = await supabaseAdmin.auth.admin.deleteUser(userId);
 
   if (error) {
