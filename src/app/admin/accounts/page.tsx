@@ -3,7 +3,7 @@
 import { useEffect, useState, useTransition } from "react";
 import { PageWrapper } from "@/components/layout/page-wrapper";
 import { TopBar } from "@/components/layout/top-bar";
-import { getUsers, createUserAccount, deleteUserAccount, updateUserRole, UserRole } from "@/actions/account-actions";
+import { getUsers, createUserAccount, deleteUserAccount, updateUserRole, updateUserProfile, UserRole } from "@/actions/account-actions";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { 
@@ -36,8 +36,17 @@ export default function AccountManagementPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Form State
+  // Create Form State
   const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    role: "cashier" as UserRole
+  });
+
+  // Edit State
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [editingUser, setEditingUser] = useState<any>(null);
+  const [editFormData, setEditFormData] = useState({
     name: "",
     email: "",
     role: "cashier" as UserRole
@@ -73,6 +82,38 @@ export default function AccountManagementPage() {
         toast.error(result.error);
       }
     });
+  };
+
+  const handleUpdateUser = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingUser) return;
+    
+    startTransition(async () => {
+      const result = await updateUserProfile(editingUser.id, {
+        name: editFormData.name,
+        role: editFormData.role
+      });
+      
+      if (result.success) {
+        toast.success("Profile Updated Successfully", {
+          description: `${editFormData.name}'s details have been updated.`
+        });
+        setIsEditDialogOpen(false);
+        fetchUsers();
+      } else {
+        toast.error(result.error);
+      }
+    });
+  };
+
+  const handleOpenEditDialog = (user: any) => {
+    setEditingUser(user);
+    setEditFormData({
+      name: user.name || "",
+      email: user.email || "",
+      role: user.role as UserRole
+    });
+    setIsEditDialogOpen(true);
   };
 
   const handleDeleteUser = (id: string, name: string) => {
@@ -202,6 +243,63 @@ export default function AccountManagementPage() {
                </form>
             </DialogContent>
           </Dialog>
+
+          {/* Edit Staff Dialog */}
+          <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+            <DialogContent className="rounded-[2.5rem] border-none shadow-2xl p-0 overflow-hidden max-w-sm">
+               <form onSubmit={handleUpdateUser}>
+                  <DialogHeader className="p-10 pb-6 bg-primary/5">
+                    <DialogTitle className="text-2xl font-black uppercase tracking-tighter italic">Edit Staff Profile</DialogTitle>
+                    <p className="text-[10px] font-bold text-on-surface-variant/60 uppercase tracking-widest mt-2">Update employee details & authority</p>
+                  </DialogHeader>
+                  
+                  <div className="p-10 pt-4 space-y-6">
+                     <div className="space-y-4 opacity-50 cursor-not-allowed">
+                        <label className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant/50 ml-1">Work Email (Locked)</label>
+                        <Input 
+                           type="email"
+                           value={editFormData.email}
+                           readOnly
+                           className="h-12 rounded-xl bg-surface-variant/10 border-none font-bold placeholder:font-bold placeholder:opacity-20 cursor-not-allowed"
+                        />
+                     </div>
+                     <div className="space-y-4">
+                        <label className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant/50 ml-1">Full Name</label>
+                        <Input 
+                           value={editFormData.name}
+                           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditFormData({...editFormData, name: e.target.value})}
+                           placeholder="Bagas Pramono"
+                           required
+                           className="h-12 rounded-xl bg-surface-variant/10 border-none font-bold placeholder:font-bold placeholder:opacity-20"
+                        />
+                     </div>
+                     <div className="space-y-4">
+                        <label className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant/50 ml-1">System Role</label>
+                        <select 
+                           value={editFormData.role}
+                           onChange={(e) => setEditFormData({...editFormData, role: e.target.value as UserRole})}
+                           className="w-full h-12 rounded-xl bg-surface-variant/10 border-none px-4 text-xs font-black uppercase tracking-widest outline-none focus:ring-1 focus:ring-primary/20 appearance-none"
+                        >
+                           <option value="super_admin">Super Admin</option>
+                           <option value="inventory_admin">Inventory Admin</option>
+                           <option value="cashier">Cashier</option>
+                        </select>
+                     </div>
+                  </div>
+
+                  <DialogFooter className="p-10 pt-0">
+                     <button 
+                        type="submit"
+                        disabled={isPending}
+                        className="w-full bg-primary text-white h-14 rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/20 active:scale-[0.98] transition-all flex items-center justify-center gap-3"
+                     >
+                        {isPending ? <Loader2 className="size-4 animate-spin" /> : <UserCog className="size-4" />}
+                        Save Changes
+                     </button>
+                  </DialogFooter>
+               </form>
+            </DialogContent>
+          </Dialog>
         </div>
 
         {/* Filters & Information Card */}
@@ -267,7 +365,10 @@ export default function AccountManagementPage() {
                        </td>
                        <td className="px-10 py-8 text-right pr-12">
                           <div className="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-all scale-95 group-hover:scale-100">
-                             <button className="p-3 bg-surface-variant/20 hover:bg-white hover:text-primary hover:shadow-xl rounded-xl transition-all">
+                             <button 
+                                onClick={() => handleOpenEditDialog(user)}
+                                className="p-3 bg-surface-variant/20 hover:bg-white hover:text-primary hover:shadow-xl rounded-xl transition-all"
+                             >
                                 <UserCog className="size-4" />
                              </button>
                              <button 

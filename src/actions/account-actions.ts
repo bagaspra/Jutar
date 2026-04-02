@@ -1,6 +1,7 @@
 "use server";
 
-import { createAdminClient, createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/supabase/server";
+import { supabaseAdmin } from "@/utils/supabase/admin";
 import { revalidatePath } from "next/cache";
 
 export type UserRole = "super_admin" | "inventory_admin" | "cashier";
@@ -25,59 +26,87 @@ export async function createUserAccount(
   name: string,
   role: UserRole
 ) {
-  const adminClient = await createAdminClient();
-
-  // 1. Create the user in Supabase Auth
-  // We use a random password and require the user to change it, 
-  // or set a default one if provided in a more advanced form.
-  // For now, let's set a default password 'JuRasa2026!'
-  const { data: authUser, error: authError } = await adminClient.auth.admin.createUser({
+  // 1. Create the user in Supabase Auth (Admin API)
+  // We bypass RLS and trigger logic by using our pure Admin Client
+  const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
     email,
-    password: "JuRasa2026!",
+    password: "JuRasa2026!", // Default secure password
     email_confirm: true,
     user_metadata: { full_name: name, role: role }
   });
 
   if (authError) {
     console.error("Create Auth User Error:", authError);
-    return { success: false, error: authError.message };
+    return { success: false, error: `Authentication Error: ${authError.message}` };
   }
 
-  // The profile is automatically created by the DB trigger
+  const userId = authUser.user.id;
+
+  // 2. Explicitly sync to the profiles table
+  // Even though a trigger exists, doing this manually with the Admin Client 
+  // guarantees the record exists and bypasses RLS issues during the creation transaction.
+  const { error: profileError } = await supabaseAdmin
+    .from("profiles")
+    .upsert({
+      id: userId,
+      email: email,
+      name: name,
+      role: role
+    });
+
+  if (profileError) {
+    console.error("Create Profile Error:", profileError);
+    // We don't delete the auth user here so admin can try to fix it,
+    // but we notify the user of the sync failure.
+    return { success: false, error: `Auth success, but Profile link failed: ${profileError.message}` };
+  }
   
   revalidatePath("/admin/accounts");
   return { success: true, user: authUser.user };
 }
 
 export async function updateUserRole(userId: string, role: UserRole) {
-  const adminClient = await createAdminClient();
-
-  // Since we have a trigger that might conflict or we want to ensure
-  // consistency, we update the profile table directly.
-  // The service role bypasses RLS.
-  const { error } = await adminClient
+  // Use the service role to bypass role escalation protection
+  const { error } = await supabaseAdmin
     .from("profiles")
     .update({ role })
     .eq("id", userId);
 
   if (error) {
     console.error("Update User Role Error:", error);
-    return { success: false, error: error.message };
+    return { success: false, error: `Update Failed: ${error.message}` };
+  }
+  revalidatePath("/admin/accounts");
+  return { success: true };
+}
+
+export async function updateUserProfile(userId: string, data: { name: string, role: UserRole }) {
+  const { error } = await supabaseAdmin
+    .from("profiles")
+    .update({ 
+      name: data.name, 
+      role: data.role,
+      updated_at: new Date().toISOString()
+    })
+    .eq("id", userId);
+
+  if (error) {
+    console.error("Update User Profile Error:", error);
+    return { success: false, error: `Update Failed: ${error.message}` };
   }
 
   revalidatePath("/admin/accounts");
   return { success: true };
 }
 
-export async function deleteUserAccount(userId: string) {
-  const adminClient = await createAdminClient();
 
+export async function deleteUserAccount(userId: string) {
   // Deleting from auth.users will cascade to the profile table
-  const { error } = await adminClient.auth.admin.deleteUser(userId);
+  const { error } = await supabaseAdmin.auth.admin.deleteUser(userId);
 
   if (error) {
     console.error("Delete User Error:", error);
-    return { success: false, error: error.message };
+    return { success: false, error: `Delete Failed: ${error.message}` };
   }
 
   revalidatePath("/admin/accounts");
