@@ -8,11 +8,13 @@ interface CartState {
   cartItems: CartItem[];
   orderType: "dine_in" | "take_away";
   activeOrderId: string | null; // Track existing 'open' order ID
+  tableNumber: string | null; // Track table number for suspended orders
   addItem: (item: MenuItem) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, qty: number) => void;
   setOrderType: (type: "dine_in" | "take_away") => void;
   setActiveOrderId: (id: string | null) => void;
+  setTableNumber: (tableNumber: string | null) => void;
   setCartItems: (items: CartItem[]) => void;
   clearCart: () => void;
   getCartTotal: () => number;
@@ -51,6 +53,7 @@ export const useCartStore = create<CartState>((set, get) => ({
   cartItems: [],
   orderType: "dine_in",
   activeOrderId: null,
+  tableNumber: null,
 
   addItem: (item) => set((state) => {
     const existing = state.cartItems.find((i) => i.id === item.id);
@@ -87,6 +90,8 @@ export const useCartStore = create<CartState>((set, get) => ({
 
   setActiveOrderId: (id) => set({ activeOrderId: id }),
 
+  setTableNumber: (tableNumber) => set({ tableNumber }),
+
   setCartItems: (items) => set((state) => {
     broadcastCart(items, state.orderType);
     return { cartItems: items };
@@ -94,7 +99,7 @@ export const useCartStore = create<CartState>((set, get) => ({
 
   clearCart: () => {
     broadcastCart([], "dine_in");
-    set({ cartItems: [], orderType: "dine_in", activeOrderId: null });
+    set({ cartItems: [], orderType: "dine_in", activeOrderId: null, tableNumber: null });
   },
 
   getCartTotal: () => {

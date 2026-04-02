@@ -12,6 +12,7 @@ interface PrintableInvoiceProps {
   tax: number;
   total: number;
   isTemporary?: boolean;
+  tableNumber?: string | null;
 }
 
 /**
@@ -27,6 +28,7 @@ export function ThermalReceipt({
   tax,
   total,
   isTemporary = false,
+  tableNumber,
 }: PrintableInvoiceProps) {
   const queueNumber = receiptNumber.split('-').pop();
 
@@ -54,6 +56,14 @@ export function ThermalReceipt({
           <p className="text-4xl font-black tracking-tighter">{queueNumber}</p>
           <p className="text-[8px] mt-1 font-bold tracking-widest">{receiptNumber}</p>
         </div>
+
+        {/* Nomor Meja - Only for Dine-In */}
+        {orderType === "dine_in" && tableNumber && (
+          <div className="my-4 border-2 border-black py-3 bg-black text-white">
+            <p className="text-[8px] font-black mb-1 uppercase tracking-widest opacity-80">Meja</p>
+            <p className="text-3xl font-black tracking-tighter">{tableNumber}</p>
+          </div>
+        )}
       </div>
 
       {/* Info Transaksi */}

@@ -19,14 +19,15 @@ export function SavedOrdersDialog() {
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [orders, setOrders] = useState<any[]>([]);
-  const { 
-    setCartItems, 
-    setActiveOrderId, 
-    setOrderType, 
-    cartItems, 
-    openOrdersCount, 
-    fetchOpenOrdersCount, 
-    setOpenOrdersCount 
+  const {
+    setCartItems,
+    setActiveOrderId,
+    setOrderType,
+    setTableNumber,
+    cartItems,
+    openOrdersCount,
+    fetchOpenOrdersCount,
+    setOpenOrdersCount
   } = useCartStore();
 
   const fetchOrders = () => {
@@ -70,6 +71,7 @@ export function SavedOrdersDialog() {
     setCartItems(items);
     setActiveOrderId(order.id);
     setOrderType(order.order_type);
+    setTableNumber(order.table_number || null);
     setOpen(false);
     toast.success(`Mengambil kembali Pesanan #${order.receipt_number.split('-').pop()}`);
   };
@@ -114,16 +116,22 @@ export function SavedOrdersDialog() {
             </div>
           ) : (
             orders.map((order) => (
-              <div 
-                key={order.id} 
-                className="group flex items-center justify-between p-4 bg-surface-variant/20 hover:bg-primary/5 rounded-2xl border border-outline/10 transition-all cursor-pointer"
+              <div
+                key={order.id}
+                className="group flex items-center justify-between p-4 bg-white border border-outline/20 hover:bg-surface-variant/10 rounded-2xl transition-all cursor-pointer shadow-md hover:shadow-lg"
                 onClick={() => handleRecall(order)}
               >
                 <div className="min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-[10px] font-black text-primary px-2 py-0.5 bg-primary/10 rounded-md">
-                      #{order.receipt_number.split('-').pop()}
-                    </span>
+                    {order.table_number ? (
+                      <span className="text-[10px] font-black text-white px-3 py-1 bg-primary rounded-md">
+                        Meja {order.table_number}
+                      </span>
+                    ) : (
+                      <span className="text-[10px] font-black text-primary px-2 py-0.5 bg-primary/10 rounded-md">
+                        #{order.receipt_number.split('-').pop()}
+                      </span>
+                    )}
                     <span className="text-[9px] font-bold text-on-surface-variant uppercase tracking-widest bg-white/50 px-2 py-0.5 rounded-md border border-outline/5 transition-all">
                       {new Date(order.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
