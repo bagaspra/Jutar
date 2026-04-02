@@ -1,20 +1,19 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
+import { supabaseAdmin } from "@/utils/supabase/admin";
 import { CartItem } from "@/types";
 
 /**
  * Fetches the public menu (active products + all categories).
- * No authentication required.
+ * Uses admin client to bypass RLS — this is safe because it's read-only public data.
  */
 export async function getPublicMenu() {
   try {
-    const supabase = await createClient();
-
     const [{ data: categories, error: catError }, { data: products, error: prodError }] =
       await Promise.all([
-        supabase.from("categories").select("id, name, slug, emoji").order("name"),
-        supabase
+        supabaseAdmin.from("categories").select("id, name, slug, emoji").order("name"),
+        supabaseAdmin
           .from("products")
           .select("id, name, price, category_id, image_url, description")
           .eq("is_active", true)
