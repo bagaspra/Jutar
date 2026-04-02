@@ -3,6 +3,7 @@
 import { useCartStore } from "@/store/useCartStore";
 import { formatCurrency, cn } from "@/lib/utils";
 import { processCheckout, saveOpenOrder } from "@/actions/order-actions";
+import { closeSession } from "@/actions/kitchen-actions";
 import { useState, useMemo, useEffect, useTransition } from "react";
 import { getPaymentMethods } from "@/actions/payment-actions";
 import { toast } from "sonner";
@@ -10,6 +11,7 @@ import { ThermalReceipt } from "./thermal-receipt";
 import { CartItem } from "@/types";
 import { SavedOrdersDialog } from "./saved-orders-dialog";
 import { TableNumberDialog } from "./table-number-dialog";
+import { ActiveSessionsDialog } from "./active-sessions-dialog";
 import { 
   Pause, 
   Printer, 
@@ -110,6 +112,7 @@ export function OrderCart() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isHolding, setIsHolding] = useState(false);
   const [showTableNumberDialog, setShowTableNumberDialog] = useState(false);
+  const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
 
   const [lastOrder, setLastOrder] = useState<{
     receiptNumber: string;
@@ -214,6 +217,11 @@ export function OrderCart() {
           isTemporary: false,
           tableNumber
         });
+        // Close kiosk dining session if one was loaded
+        if (activeSessionId) {
+          await closeSession(activeSessionId);
+          setActiveSessionId(null);
+        }
         clearCart();
         setSelectedPaymentMethodId(null);
         fetchOpenOrdersCount(); // Refresh badge
@@ -247,6 +255,7 @@ export function OrderCart() {
                )}
             </div>
              <div className="flex items-center gap-2">
+               <ActiveSessionsDialog onSessionLoaded={(id) => setActiveSessionId(id)} />
                <SavedOrdersDialog />
                <div className="bg-primary text-white px-4 py-1.5 rounded-full text-[10px] font-black shadow-lg shadow-primary/20 flex items-center gap-2 transition-all active:scale-95">
                  <span className="material-symbols-outlined text-xs material-symbols-fill">shopping_basket</span>
