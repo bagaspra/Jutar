@@ -12,10 +12,10 @@ export async function getPublicMenu() {
   try {
     const [{ data: categories, error: catError }, { data: products, error: prodError }] =
       await Promise.all([
-        supabaseAdmin.from("categories").select("id, name, slug, emoji").order("name"),
+        supabaseAdmin.from("categories").select("id, name, slug").order("name"),
         supabaseAdmin
           .from("products")
-          .select("id, name, price, category_id, image_url, description")
+          .select("id, name, price, category_id, image_url")
           .eq("is_active", true)
           .order("name"),
       ]);
@@ -25,7 +25,7 @@ export async function getPublicMenu() {
 
     return { success: true, categories: categories ?? [], products: products ?? [] };
   } catch (error: any) {
-    console.error("getPublicMenu Error:", error);
+    console.error("[getPublicMenu] FATAL Error:", error);
     return { success: false, categories: [], products: [] };
   }
 }

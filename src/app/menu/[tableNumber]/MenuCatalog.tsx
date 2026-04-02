@@ -24,7 +24,6 @@ interface Product {
   category_id: string;
   category?: string;
   image_url?: string;
-  description?: string;
 }
 
 interface Category {
