@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { createSession, verifySession } from "@/actions/session-actions";
+import { MenuCatalog } from "./MenuCatalog";
 
 const SESSION_KEY = "jutar_session_token";
 
@@ -18,6 +19,7 @@ export function SessionGate({ tableNumber }: Props) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sessionName, setSessionName] = useState<string | null>(null);
+  const [sessionId, setSessionId] = useState<string | null>(null);
 
   useEffect(() => {
     const check = async () => {
@@ -31,6 +33,7 @@ export function SessionGate({ tableNumber }: Props) {
       const result = await verifySession(token);
 
       if (result.success && result.status === "active") {
+        setSessionId(token);
         setSessionName(result.session?.customer_name ?? null);
         setView("menu");
       } else {
@@ -55,6 +58,7 @@ export function SessionGate({ tableNumber }: Props) {
 
     if (result.success && result.sessionId) {
       localStorage.setItem(SESSION_KEY, result.sessionId);
+      setSessionId(result.sessionId);
       setSessionName(name);
       setView("menu");
     } else {
@@ -145,35 +149,10 @@ export function SessionGate({ tableNumber }: Props) {
 
   // view === "menu"
   return (
-    <div className="w-full min-h-screen flex flex-col items-center justify-center p-6" style={{ backgroundColor: "#F5F0EB" }}>
-      <div className="w-full max-w-sm flex flex-col items-center text-center animate-in fade-in duration-500">
-        <div className="mb-4">
-          <svg width="52" height="60" viewBox="0 0 52 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M28 20 L28 44 Q28 54 18 54 Q10 54 8 48" stroke="#C8102E" strokeWidth="6" strokeLinecap="round" fill="none"/>
-            <path d="M18 20 L36 20" stroke="#C8102E" strokeWidth="6" strokeLinecap="round"/>
-            <path d="M36 20 Q44 20 44 13 Q44 6 36 6 Q30 6 28 12" stroke="#C8102E" strokeWidth="4.5" strokeLinecap="round" fill="none"/>
-            <circle cx="28" cy="12" r="2.5" fill="#C8102E"/>
-          </svg>
-        </div>
-        <h1 className="text-xl font-black uppercase tracking-widest mb-1" style={{ color: "#C8102E" }}>JURASA</h1>
-        <p className="text-[10px] font-bold tracking-widest uppercase mb-8" style={{ color: "#999" }}>MEJA {tableNumber}</p>
-
-        <div className="w-full bg-white rounded-3xl p-8" style={{ boxShadow: "0 8px 40px rgba(0,0,0,0.08)" }}>
-          <p className="text-xs font-black uppercase tracking-widest mb-2" style={{ color: "#C8102E" }}>
-            Halo, {sessionName}!
-          </p>
-          <h2 className="text-2xl font-black text-gray-900 mb-3">Katalog Menu</h2>
-          <div className="border-2 border-dashed border-gray-200 rounded-2xl py-12 px-4 flex flex-col items-center gap-3">
-            <span className="text-4xl">🍽️</span>
-            <p className="text-sm font-black text-gray-400 uppercase tracking-widest">Coming Soon</p>
-            <p className="text-xs text-gray-300 font-medium">Menu katalog akan tersedia di update berikutnya.</p>
-          </div>
-        </div>
-
-        <p className="text-center text-[10px] mt-8 font-bold uppercase tracking-[0.15em]" style={{ color: "#BBB" }}>
-          JURASA POS © 2026 • DIRANCANG UNTUK EFISIENSI
-        </p>
-      </div>
-    </div>
+    <MenuCatalog
+      tableNumber={tableNumber}
+      sessionId={sessionId!}
+      customerName={sessionName ?? ""}
+    />
   );
 }
