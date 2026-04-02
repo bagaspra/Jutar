@@ -14,6 +14,7 @@ const NAV_ITEMS = [
   { icon: "inventory_2", label: "Kelola", href: "/admin/management", roles: ["super_admin", "cashier", "inventory_admin"] },
   { icon: "bar_chart", label: "Laporan", href: "/admin/report", roles: ["super_admin"] },
   { icon: "manage_accounts", label: "Akun", href: "/admin/accounts", roles: ["super_admin"] },
+  { icon: "soup_kitchen", label: "Dapur", href: "/kitchen", roles: ["super_admin", "cashier"] },
   { icon: "tv", label: "CFD", href: "/cfd", roles: ["super_admin", "cashier"] },
 ];
 

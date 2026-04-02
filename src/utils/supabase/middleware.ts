@@ -51,7 +51,7 @@ export const updateSession = async (request: NextRequest) => {
   const pathname = request.nextUrl.pathname;
 
   // 1. Initial Protection: All /admin routes (and others) require login
-  const publicRoutes = ["/login", "/cfd", "/menu"];
+  const publicRoutes = ["/login", "/cfd", "/menu", "/kitchen"];
   const isPublic = publicRoutes.some(route => pathname === route || pathname.startsWith(route));
   const adminRoutes = ["/admin", "/"];
   const loginRequired = !isPublic && adminRoutes.some(route => pathname === route || pathname.startsWith(route));
