@@ -38,6 +38,14 @@ export interface OrderItem {
   products?: MenuItem;
 }
 
+export interface DiningSession {
+  id: string;
+  table_number: string;
+  customer_name: string;
+  status: "active" | "paid" | "cancelled";
+  created_at: string;
+}
+
 export interface RawMaterial {
   id: string;
   name: string;

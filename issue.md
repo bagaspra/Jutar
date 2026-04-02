@@ -1,29 +1,31 @@
-Issue #1: Setup Skema Database & Sistem Sesi Pelanggan (QR Kiosk Foundation)
+Issue #2: Alur Pemesanan Kiosk & Riwayat Keranjang Pelanggan
 Latar Belakang & Objektif
-Kita akan membangun fitur pemesanan mandiri (QR Kiosk) dengan model bayar nanti (post-pay) dan dukungan berbagi meja (shared table/aiseki). Langkah pertama adalah menyiapkan arsitektur database dan sistem "Sesi" agar pelanggan tidak kehilangan keranjang mereka jika browser tidak sengaja tertutup.
+Melanjutkan Issue #1, setelah pelanggan memiliki sesi aktif (Sesi ID), mereka harus bisa melihat menu, memasukkan item ke keranjang, dan mengirim pesanan tersebut ke database. Riwayat pesanan yang sudah dikirim harus tetap terlihat di layar HP mereka.
 
 Persyaratan Fitur (Acceptance Criteria)
-1. Pembaruan Skema Database (Supabase)
+1. Katalog Menu & Keranjang Pelanggan
 
-Buat tabel baru bernama dining_sessions.
+Bangun antarmuka UI di /menu/[tableNumber] yang menampilkan daftar menu aktif dari database.
 
-Kolom yang dibutuhkan: id (UUID, berfungsi sebagai token sesi), table_number (String/Int), customer_name (String), status (Enum: active, paid, cancelled), created_at.
+Buat sistem Keranjang Lokal (State Management misal: Zustand) khusus untuk aplikasi pelanggan. Pelanggan bisa menambah/mengurangi kuantitas makanan.
 
-Perbarui tabel orders (atau tabel relevan yang menyimpan transaksi) dengan menambahkan foreign key session_id yang merujuk ke dining_sessions(id). Atur relasinya menjadi ON DELETE SET NULL atau CASCADE.
+2. Pengiriman Pesanan (Order Submission)
 
-2. Halaman & Logika Pembuatan Sesi (Customer Web App)
+Tambahkan tombol "Kirim Pesanan ke Dapur".
 
-Buat routing publik baru: /menu/[tableNumber].
+Saat ditekan, sistem harus melakukan INSERT data ke tabel orders (dan order_items).
 
-Saat halaman ini diakses, jalankan logika Session Check:
+KRUSIAL: Payload insert harus menyertakan session_id (diambil dari localStorage) dan berstatus awal pending_kitchen.
 
-Cek localStorage browser untuk mencari kunci jutar_session_token.
+Setelah berhasil dikirim, kosongkan Keranjang Lokal pelanggan.
 
-Jika TIDAK ADA token: Tampilkan form "Selamat Datang" yang meminta input Nama Pelanggan. Setelah di-Submit, buat baris baru di tabel dining_sessions (dengan status active), dan simpan UUID yang dihasilkan ke localStorage.
+3. Riwayat Pesanan Aktif (Order History)
 
-Jika ADA token: Verifikasi ke Supabase apakah sesi tersebut masih active. Jika ya, langsung arahkan pengguna ke halaman Katalog Menu. Jika sudah paid, hapus localStorage dan minta nama ulang.
+Sediakan tab atau area "Pesanan Saya" di UI pelanggan.
+
+Lakukan fetch (pengambilan data) dari tabel orders yang memiliki session_id milik pelanggan tersebut.
+
+Tampilkan daftar menu apa saja yang sudah mereka pesan dan status masakannya (misal: "Sedang Dimasak", "Selesai"). Ini mencegah pelanggan merasa pesanannya belum masuk.
 
 Catatan Teknis (High-Level)
-Gunakan Server Actions atau API Route untuk pembuatan sesi agar aman.
-
-Fokus Issue ini MURNI pada pembuatan Sesi dan pengamanan routing awal. Tampilan katalog menu yang sebenarnya akan dikerjakan di Issue selanjutnya.
+Pastikan RLS (Row Level Security) di Supabase diatur agar pengguna publik (tanpa login) bisa melakukan INSERT ke tabel orders ASALKAN mereka mengirimkan session_id yang valid dan berstatus active.
