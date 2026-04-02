@@ -21,3 +21,6 @@ export function createAdminClient() {
     }
   });
 }
+
+// Singleton for easier use in server actions
+export const supabaseAdmin = createAdminClient();
