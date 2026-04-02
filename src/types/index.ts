@@ -26,6 +26,7 @@ export interface Order {
   status: string;
   created_at: string;
   order_type: "dine_in" | "take_away";
+  table_number?: string | null;
 }
 
 export interface OrderItem {

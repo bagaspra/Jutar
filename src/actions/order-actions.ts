@@ -13,7 +13,8 @@ export async function saveOpenOrder(
     totalAmount: number,
     orderType: "dine_in" | "take_away",
     existingOrderId?: string | null,
-    paymentMethodId?: string | null
+    paymentMethodId?: string | null,
+    tableNumber?: string | null
 ) {
     try {
         const supabase = await createClient();
@@ -33,11 +34,12 @@ export async function saveOpenOrder(
 
             await supabase
                 .from("orders")
-                .update({ 
-                    total_amount: totalAmount, 
+                .update({
+                    total_amount: totalAmount,
                     order_type: orderType,
                     status: 'open',
-                    payment_method_id: paymentMethodId 
+                    payment_method_id: paymentMethodId,
+                    table_number: tableNumber || null
                 })
                 .eq("id", orderId);
             
@@ -61,6 +63,7 @@ export async function saveOpenOrder(
                     status: "open",
                     order_type: orderType,
                     payment_method_id: paymentMethodId,
+                    table_number: tableNumber || null,
                 })
                 .select()
                 .single();
@@ -97,12 +100,13 @@ export async function saveOpenOrder(
  * Triggers the inventory logic.
  */
 export async function processCheckout(
-  cartItems: CartItem[], 
-  paymentMethod: string, 
+  cartItems: CartItem[],
+  paymentMethod: string,
   totalAmount: number,
   orderType: "dine_in" | "take_away" = "dine_in",
   existingOrderId?: string | null,
-  paymentMethodId?: string | null
+  paymentMethodId?: string | null,
+  tableNumber?: string | null
 ) {
   try {
     const supabase = await createClient();
@@ -120,6 +124,7 @@ export async function processCheckout(
                 total_amount: totalAmount,
                 order_type: orderType,
                 created_at: new Date().toISOString(), // Update creation time to payment time
+                table_number: tableNumber || null,
             })
             .eq("id", orderId)
             .select()
@@ -149,6 +154,7 @@ export async function processCheckout(
                 payment_method_id: paymentMethodId,
                 status: "paid",
                 order_type: orderType,
+                table_number: tableNumber || null,
             })
             .select()
             .single();

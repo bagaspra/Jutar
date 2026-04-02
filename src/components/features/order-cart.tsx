@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { ThermalReceipt } from "./thermal-receipt";
 import { CartItem } from "@/types";
 import { SavedOrdersDialog } from "./saved-orders-dialog";
+import { TableNumberDialog } from "./table-number-dialog";
 import { 
   Pause, 
   Printer, 
@@ -78,16 +79,18 @@ function OrderItem({ name, price, quantity, image, onRemove, onUpdateQty }: Orde
 }
 
 export function OrderCart() {
-  const { 
-    cartItems, 
-    orderType, 
+  const {
+    cartItems,
+    orderType,
     activeOrderId,
-    setOrderType, 
-    removeItem, 
-    updateQuantity, 
-    clearCart, 
+    tableNumber,
+    setOrderType,
+    removeItem,
+    updateQuantity,
+    clearCart,
     getCartTotal,
     setActiveOrderId,
+    setTableNumber,
     fetchOpenOrdersCount,
     selectedPaymentMethodId,
     setSelectedPaymentMethodId
@@ -106,7 +109,8 @@ export function OrderCart() {
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [isHolding, setIsHolding] = useState(false);
-  
+  const [showTableNumberDialog, setShowTableNumberDialog] = useState(false);
+
   const [lastOrder, setLastOrder] = useState<{
     receiptNumber: string;
     items: CartItem[];
@@ -116,6 +120,7 @@ export function OrderCart() {
     orderType: "dine_in" | "take_away";
     date: string;
     isTemporary?: boolean;
+    tableNumber?: string | null;
   } | null>(null);
   
   const subtotal = useMemo(() => cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0), [cartItems]);
@@ -133,12 +138,13 @@ export function OrderCart() {
     }
   }, [lastOrder]);
 
-  const handleHoldOrder = async () => {
+  const handleHoldOrder = async (tableNum?: string | null) => {
     if (cartItems.length === 0) return;
     setIsHolding(true);
     try {
-      const result = await saveOpenOrder(cartItems, total, orderType, activeOrderId, selectedPaymentMethodId);
+      const result = await saveOpenOrder(cartItems, total, orderType, activeOrderId, selectedPaymentMethodId, tableNum || null);
       if (result.success && result.receiptNumber) {
+        setTableNumber(tableNum || null);
         toast.success(`Order ${result.receiptNumber.split('-').pop()} Held Successfully`);
         clearCart();
         setSelectedPaymentMethodId(null);
@@ -162,7 +168,7 @@ export function OrderCart() {
     if (cartItems.length === 0) return;
     setIsHolding(true);
     try {
-      const result = await saveOpenOrder(cartItems, total, orderType, activeOrderId, selectedPaymentMethodId);
+      const result = await saveOpenOrder(cartItems, total, orderType, activeOrderId, selectedPaymentMethodId, tableNumber);
       if (result.success && result.receiptNumber) {
         setLastOrder({
           receiptNumber: result.receiptNumber,
@@ -172,7 +178,8 @@ export function OrderCart() {
           total,
           orderType,
           date: new Date().toLocaleString(),
-          isTemporary: true
+          isTemporary: true,
+          tableNumber
         });
         setActiveOrderId(result.orderId ?? null);
         toast.info("Temporary Bill Generated");
@@ -188,12 +195,12 @@ export function OrderCart() {
       toast.error("Please select a payment method");
       return;
     }
-    
+
     setIsProcessing(true);
     try {
       const currentItems = [...cartItems];
-      const result = await processCheckout(cartItems, "ID", total, orderType, activeOrderId, selectedPaymentMethodId);
-      
+      const result = await processCheckout(cartItems, "ID", total, orderType, activeOrderId, selectedPaymentMethodId, tableNumber);
+
       if (result.success) {
         toast.success("Transaction Finalized!");
         setLastOrder({
@@ -204,7 +211,8 @@ export function OrderCart() {
           total,
           orderType,
           date: new Date().toLocaleString(),
-          isTemporary: false
+          isTemporary: false,
+          tableNumber
         });
         clearCart();
         setSelectedPaymentMethodId(null);
@@ -225,10 +233,17 @@ export function OrderCart() {
             <div className="flex items-center gap-3">
                <h2 className="text-xl font-extrabold uppercase tracking-tighter italic font-headline">Order</h2>
                {activeOrderId && (
-                 <span className="flex items-center gap-1.5 px-2.5 py-1 bg-primary/10 text-primary border border-primary/20 rounded-lg text-[9px] font-black uppercase tracking-widest animate-pulse shadow-sm">
-                   <Pause className="size-2.5 fill-primary" />
-                   Sedang Ditunda
-                 </span>
+                 <div className="flex items-center gap-2">
+                   <span className="flex items-center gap-1.5 px-2.5 py-1 bg-primary/10 text-primary border border-primary/20 rounded-lg text-[9px] font-black uppercase tracking-widest animate-pulse shadow-sm">
+                     <Pause className="size-2.5 fill-primary" />
+                     Sedang Ditunda
+                   </span>
+                   {tableNumber && (
+                     <span className="flex items-center gap-1.5 px-2.5 py-1 bg-blue-100 text-blue-700 border border-blue-200 rounded-lg text-[9px] font-black uppercase tracking-widest shadow-sm">
+                       Meja {tableNumber}
+                     </span>
+                   )}
+                 </div>
                )}
             </div>
              <div className="flex items-center gap-2">
@@ -353,8 +368,14 @@ export function OrderCart() {
           </div>
           
           <div className="grid grid-cols-5 gap-3">
-             <button 
-               onClick={handleHoldOrder}
+             <button
+               onClick={() => {
+                 if (orderType === "dine_in") {
+                   setShowTableNumberDialog(true);
+                 } else {
+                   handleHoldOrder();
+                 }
+               }}
                disabled={cartItems.length === 0 || isHolding}
                className="col-span-2 bg-white border-2 border-outline/20 text-on-surface-variant font-black py-4 rounded-2xl transition-all active:scale-[0.9] hover:bg-surface-variant/20 hover:border-on-surface-variant/10 text-[9px] uppercase tracking-widest flex items-center justify-center gap-2"
                title="Simpan pesanan untuk nanti"
@@ -401,9 +422,20 @@ export function OrderCart() {
         </div>
       </aside>
 
+      {/* Table Number Dialog */}
+      <TableNumberDialog
+        open={showTableNumberDialog}
+        onOpenChange={setShowTableNumberDialog}
+        orderType={orderType}
+        onConfirm={(tableNum) => {
+          setShowTableNumberDialog(false);
+          handleHoldOrder(tableNum);
+        }}
+      />
+
       {/* Hidden component for printing */}
       {lastOrder && (
-        <ThermalReceipt 
+        <ThermalReceipt
           receiptNumber={lastOrder.receiptNumber}
           date={lastOrder.date}
           items={lastOrder.items}
@@ -412,6 +444,7 @@ export function OrderCart() {
           total={lastOrder.total}
           orderType={lastOrder.orderType}
           isTemporary={lastOrder.isTemporary}
+          tableNumber={lastOrder.tableNumber}
         />
       )}
     </>

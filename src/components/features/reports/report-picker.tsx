@@ -38,7 +38,7 @@ export function ReportPicker() {
       
       <Select 
         value={String(currentMonth)} 
-        onValueChange={(val) => handleUpdate("month", val)}
+        onValueChange={(val) => val && handleUpdate("month", val)}
       >
         <SelectTrigger className="w-[140px] h-10 border-none bg-transparent font-black uppercase text-[10px] tracking-widest focus:ring-0">
           <SelectValue />
@@ -56,7 +56,7 @@ export function ReportPicker() {
 
       <Select 
         value={String(currentYear)} 
-        onValueChange={(val) => handleUpdate("year", val)}
+        onValueChange={(val) => val && handleUpdate("year", val)}
       >
         <SelectTrigger className="w-[100px] h-10 border-none bg-transparent font-black uppercase text-[10px] tracking-widest focus:ring-0">
           <SelectValue />
