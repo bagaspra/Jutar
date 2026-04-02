@@ -21,7 +21,8 @@ interface Product {
   id: string;
   name: string;
   price: number;
-  category: string;
+  category_id: string;
+  category?: string;
   image_url?: string;
   description?: string;
 }
@@ -108,7 +109,7 @@ export function MenuCatalog({ tableNumber, sessionId, customerName }: Props) {
   const filteredProducts =
     selectedCategory === "all"
       ? products
-      : products.filter((p) => p.category === selectedCategory);
+      : products.filter((p) => p.category_id === selectedCategory);
 
   const totalItems = getTotalItems();
   const subtotal = getSubtotal();
@@ -187,10 +188,10 @@ export function MenuCatalog({ tableNumber, sessionId, customerName }: Props) {
                 {categories.map((cat) => (
                   <button
                     key={cat.id}
-                    onClick={() => setSelectedCategory(cat.slug)}
+                    onClick={() => setSelectedCategory(cat.id)}
                     className="shrink-0 flex items-center gap-1 px-4 py-1.5 rounded-full text-[11px] font-black uppercase tracking-wide transition-all"
                     style={
-                      selectedCategory === cat.slug
+                      selectedCategory === cat.id
                         ? { backgroundColor: BRAND_RED, color: "white" }
                         : { backgroundColor: "white", color: "#6B7280", border: "1px solid #E5E7EB" }
                     }
@@ -239,7 +240,7 @@ export function MenuCatalog({ tableNumber, sessionId, customerName }: Props) {
                           {/* Qty controls */}
                           {qty === 0 ? (
                             <button
-                              onClick={() => addItem(product)}
+                              onClick={() => addItem({ ...product, category: product.category ?? product.category_id })}
                               className="w-full py-1.5 rounded-xl text-white text-[11px] font-black uppercase tracking-wide flex items-center justify-center gap-1 transition-all active:scale-95"
                               style={{ backgroundColor: BRAND_RED }}
                             >
@@ -257,7 +258,7 @@ export function MenuCatalog({ tableNumber, sessionId, customerName }: Props) {
                               </button>
                               <span className="text-sm font-black text-gray-900 tabular-nums">{qty}</span>
                               <button
-                                onClick={() => addItem(product)}
+                                onClick={() => addItem({ ...product, category: product.category ?? product.category_id })}
                                 className="w-7 h-7 rounded-lg flex items-center justify-center transition-all active:scale-90"
                                 style={{ backgroundColor: BRAND_RED, color: "white" }}
                               >

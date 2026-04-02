@@ -16,7 +16,7 @@ export async function getPublicMenu() {
         supabase.from("categories").select("id, name, slug, emoji").order("name"),
         supabase
           .from("products")
-          .select("id, name, price, category, image_url, description")
+          .select("id, name, price, category_id, image_url, description")
           .eq("is_active", true)
           .order("name"),
       ]);
